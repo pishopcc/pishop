@@ -1,0 +1,66 @@
+<body>
+    <div class="x-body">
+        <form class="layui-form">
+          <div class="layui-form-item">
+            <label class="layui-form-label">选择管理员</label>
+            <div class="layui-input-inline">
+              <select name="admin_id">
+                {volist name="adminList" id="admin"}
+                <option value="{$admin.uid}">{$admin.nickname}</option>
+                {/volist}
+              </select>
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                  <span class="x-red">*</span>只有超级管理员才能使用这个功能
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_repass" class="layui-form-label">
+              </label>
+              <button  class="layui-btn" lay-filter="save" lay-submit="">
+                  切换
+              </button>
+          </div>
+      </form>
+    </div>
+    <script>
+      layui.use(['form','layer'], function(){
+          $ = layui.jquery;
+        var form = layui.form
+        ,layer = layui.layer;
+
+        //监听提交
+        form.on('submit(save)', function(data){
+          console.log(data);
+          //发异步，把数据提交给php
+
+          $.ajax({
+              url: "{:pishop_url('admin/index/ChangeAdmin')}",
+              type: 'POST',
+              dataType: 'json',
+              data: data.field,
+            })
+            .done(function(response) {
+                if(response.code==0){
+                  layer.msg(response.msg,function(){});
+                }else{
+                  layer.alert(response.msg, {icon: 6},function(){
+                      // 获得frame索引
+                      var index = parent.layer.getFrameIndex(window.name);
+                      //关闭当前frame
+                      parent.layer.close(index);
+
+                      parent.location.reload();
+                  });
+                }
+            })
+            .fail(function() {
+                layer.msg('系统异常，小Pi要休息一下,稍后再试',function(){});
+            })
+            return false;
+        });
+      });
+  </script>
+  </body>
+
+</html>

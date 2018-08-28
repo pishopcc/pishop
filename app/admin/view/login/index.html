@@ -1,0 +1,61 @@
+<body class="login-bg">
+    
+    <div class="login">
+        <div class="message">{:config('site_name')}-管理中心</div>
+        <div id="darkbannerwrap"></div>
+        
+        <form class="layui-form" >
+            <input name="username" placeholder="用户名"  type="text" lay-verify="required" class="layui-input" value="admin">
+            <hr class="hr15">
+            <input name="password" lay-verify="required" placeholder="密码"  type="password" class="layui-input" value="123456">
+            <div id="token">{:token()}</div>
+            <hr class="hr15">
+            <div>
+                <input name="captcha" lay-verify="required" placeholder="验证码"  type="text" class="layui-input"  style="width: 45%;display: inline-block;">
+                <img src="{:pishop_url('admin/login/captcha')}" captcha_url="{:pishop_url('admin/login/captcha')}" width="50%" style="float: right" id="captcha" onclick="change_captcha()">
+            </div>
+            <hr class="hr15">
+            <input value="登录" lay-submit lay-filter="login" style="width:100%;" type="submit">
+            <hr class="hr20" >
+        </form>
+    </div>
+
+    <script>
+        $(function  () {
+            layui.use('form', function(){
+              var form = layui.form;
+              //监听提交
+              form.on('submit(login)', function(data){
+
+                $.ajax({
+                  url: "{:pishop_url('admin/login/checklogin')}",
+                  type: 'POST',
+                  dataType: 'json',
+                  data: data.field,
+                })
+                .done(function(response) {
+                    if(response.code==0){
+                      layer.msg(response.msg,function(){});
+                      $('#token').html(response.data.token);
+                      change_captcha();
+                    }else{
+                      layer.alert(response.msg, {icon: 6},function(){
+                          location.href = response.url;
+                      });
+                    }
+                })
+                .fail(function() {
+                    layer.msg('系统异常，小Pi要休息一下,稍后再试',function(){});
+                })
+                return false;
+              });
+            });
+        })
+
+         //换验证码
+        function change_captcha() {
+              $('#captcha').attr('src',$('#captcha').attr('captcha_url')+"?id="+Math.random());
+        }
+    </script>
+</body>
+</html>

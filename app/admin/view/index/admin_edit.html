@@ -1,0 +1,97 @@
+<body>
+    <div class="x-body">
+        <form class="layui-form">
+          <div class="layui-form-item">
+              <label for="L_email" class="layui-form-label">
+                  登录名
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" name="nickname" required="" lay-verify="required"
+                  autocomplete="off" value="{$user->nickname}" class="layui-input">
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                  <span class="x-red">*</span>登录的时候使用
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  性别
+              </label>
+              <div class="layui-input-inline" style="width:280px;">
+
+                  <input type="radio" name="sex" {$user->sex== '0' ? 'checked':''} value="0" title="保密">
+                  <input type="radio" name="sex" {$user->sex== '1' ? 'checked':''} value="1" title="男">
+                  <input type="radio" name="sex" {$user->sex== '2' ? 'checked':''} value="2" title="女">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_pass" class="layui-form-label">
+                  邮箱
+              </label>
+              <div class="layui-input-inline">
+                  <input type="email"  name="email" required="" lay-verify="email"
+                  autocomplete="off" value="{$user->email}" class="layui-input">
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                  登录的时候使用
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_pass" class="layui-form-label">
+                  个性签名
+              </label>
+              <div class="layui-input-inline" style="width: 400px;">
+                  <textarea name="sign" placeholder="请输入内容" class="layui-textarea">{$user->sign}</textarea>
+              </div>
+          </div>
+          
+          <div class="layui-form-item">
+              <label for="L_repass" class="layui-form-label">
+              </label>
+              <button  class="layui-btn" lay-filter="save" lay-submit="">
+                  保存
+              </button>
+          </div>
+      </form>
+    </div>
+    <script>
+      layui.use(['form','layer'], function(){
+          $ = layui.jquery;
+        var form = layui.form
+        ,layer = layui.layer;
+
+        //监听提交
+        form.on('submit(save)', function(data){
+          console.log(data);
+          //发异步，把数据提交给php
+
+          $.ajax({
+              url: "{:pishop_url('admin/index/adminEdit')}",
+              type: 'POST',
+              dataType: 'json',
+              data: data.field,
+            })
+            .done(function(response) {
+                if(response.code==0){
+                  layer.msg(response.msg,function(){});
+                }else{
+                  layer.alert(response.msg, {icon: 6},function(){
+                      // 获得frame索引
+                      var index = parent.layer.getFrameIndex(window.name);
+                      //关闭当前frame
+                      parent.layer.close(index);
+                  });
+                }
+            })
+            .fail(function() {
+                layer.msg('系统异常，小Pi要休息一下,稍后再试',function(){});
+            })
+            return false;
+        });
+        
+        
+      });
+  </script>
+  </body>
+
+</html>
