@@ -11,7 +11,7 @@
 // +---------------------------------------------------------------------
 namespace app\admin\validate;
 use think\Validate;
-use app\admin\model\User as UserModel;
+use app\common\model\User as UserModel;
 
 /**
 * 登录验证器
@@ -22,8 +22,8 @@ class User extends Validate
         'nickname'  =>  'require|unique:user|length:5,8',
         'email' =>  'require|email|unique:user',
         'oldpass'=>'require|checkPassword',
-        'password'=>'require|length:6,15|confirm:repassword'
-
+        'password'=>'require|length:6,15',
+        'role'=>'require|array'
     ];
     
     protected $message = [
@@ -37,11 +37,14 @@ class User extends Validate
         'password.require'   =>  '新密码必须',
         'password.length'   =>  '新密码必须长度6-15',
         'password.confirm'   =>  '重复密码不一致',
+        'role.require'=>'角色必须选'
     ];
 
     protected $scene = [
         'adminEdit'  =>  ['nickname','email'],
-        'changePassword'=>['oldpass','password']
+        'changePassword'=>['oldpass','password'],
+        'addAdmin'=>['nickname','email','password','role'],
+        'editAdmin'=>['nickname','email','role']
     ];
 
 

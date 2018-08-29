@@ -10,21 +10,40 @@
 // | Author: zhibinm <113664000@qq.com> Date: 2018-04-28 11:09:49
 // +---------------------------------------------------------------------
 namespace app\admin\controller;
+use app\common\model\User as UserModel;
 use pishop\controller\AdminBase;
 use think\Cache;
 use think\Loader;
 use think\Request;
 
-class Config extends AdminBase{
-    public function stieconfig()
+class User extends AdminBase{
+    /**
+     * [addAdmin 管理员增加]
+     */
+    public function status()
     {
-       return $this->fetch();
-    }
-    public function cleanCache()
-    {
-    	pishop_del_file(RUNTIME_PATH);
-		Cache::clear();
-        sleep(1);
-    	$this->success("清除缓存成功");
+        if (Request::instance()->isAjax()){
+
+            $data = input('post.');
+
+            if($data['uid']==1){
+            	$this->errot("超级管理员状态不能变更");
+            }
+
+            $user = UserModel::get($data['uid']);
+
+	    	if($data['status']=='true'){
+	    		$user->status = 1;
+	    		$user->save();
+	    	}else{
+	    		$user->status = 0;
+	    		$user->save();
+	    	}
+
+	    	$this->success('变更成功');
+
+        }else{
+            $this->error('非法请求');
+        }
     }
 }

@@ -11,7 +11,7 @@
 // +---------------------------------------------------------------------
 namespace app\admin\validate;
 use think\Validate;
-use app\admin\model\User as UserModel;
+use app\common\model\User as UserModel;
 use pishop\lib\Auth;
 
 /**

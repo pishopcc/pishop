@@ -11,11 +11,12 @@
 // +---------------------------------------------------------------------
 namespace app\admin\controller;
 use pishop\controller\AdminBase;
-use app\admin\model\User as UserModel;
+use app\common\model\User as UserModel;
 use app\admin\logic\AdminNode as AdminNodeLogic;
 use think\Request;
 use think\Loader;
 use think\Db;
+use pishop\lib\Auth;
 
 class Index extends AdminBase
 {
@@ -37,7 +38,7 @@ class Index extends AdminBase
      */
     public function adminEdit()
     {
-        if (Request::instance()->isPost()){
+        if (Request::instance()->isAjax()){
 
             $postData = Request::instance()->post();
 
@@ -71,7 +72,7 @@ class Index extends AdminBase
      */
     public function adminChangePassword()
     {
-        if (Request::instance()->isPost()){
+        if (Request::instance()->isAjax()){
 
             $postData = Request::instance()->post();
 
@@ -111,6 +112,10 @@ class Index extends AdminBase
             $user = UserModel::get($postData['admin_id']);
 
             session('ADMIN_ID',$postData['admin_id']);
+
+            session('_AUTH_LIST_',null);
+
+            $AuthList = (new Auth)->getAuthList(session('ADMIN_ID'),1);
 
             session('nickname',$user->nickname);
 

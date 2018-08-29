@@ -17,7 +17,7 @@
         </ul>
         <ul class="layui-nav right" lay-filter="">
             <li class="layui-nav-item to-index"><a href="/">帮助手册</a></li>
-            <li class="layui-nav-item to-index"><a href="/">清缓存</a></li>
+            <li class="layui-nav-item to-index"><a id="clearCache">更新缓存</a></li>
             <li class="layui-nav-item to-index"><a href="/">商城首页</a></li>
             <li class="layui-nav-item">
                 <a href="javascript:;">{:session('nickname')}</a>
@@ -101,5 +101,25 @@
         <div class="copyright">{:config('copyright')}</div>  
     </div>
     <!-- 底部结束 -->
+    <script>
+        $('#clearCache').click(function(event) {
+            layer.msg('清除缓存中', {
+              icon: 16
+              ,shade: 0.01,
+              time:10000
+            });
+            $.get('{:pishop_url('admin/config/cleanCache')}', function(data) {
+                if(data.code==1){
+                    layer.msg(data.msg, {
+                      icon: 6
+                      ,shade: 0.01,
+                      time:500
+                    });
+                }else{
+                    layer.msg(data.msg, function(){});
+                }
+            });
+        });
+    </script>
 </body>
 </html>

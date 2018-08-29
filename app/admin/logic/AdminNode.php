@@ -30,38 +30,28 @@ class AdminNode extends Model
 
         $menuListArr = [];
 
+        $AuthList = (new Auth)->getAuthList(session('ADMIN_ID'),1);
+
         foreach ($menuList as  $row) {
 
             $menu = $row->toArray();
 
-            $menu['url'] = strtolower($menu['module'] .'/'. $menu['controller'].'/'.$menu['action']);
+            if($menu['controller']){
+                $menu['url'] = strtolower($menu['module'] .'/'. $menu['controller'].'/'.$menu['action']);
+              
 
-            $res = $this->checkAuth($menu['url']);
-
-            if($res){
-                $menu['url'] = pishop_url($menu['url']);
-                $menuListArr[] = $menu; 
+              if(in_array($menu['url'],$AuthList) || session('ADMIN_ID')=='1'){
+                  $menu['url'] = pishop_url($menu['url']);
+                  $menuListArr[] = $menu; 
+              }
+            }else{
+                $menuListArr[] = $menu;
             }
         }
 
         $data = $this->getTree($menuListArr);
 
         return $data;
-   }
-   /**
-    * [checkAuth 判断该用户有没有菜单节点的权限]
-    * @param  [type] $rule [description]
-    * @return [type]       [description]
-    */
-   protected function checkAuth($rule)
-   {
-      return true;
-      $AuthList = (new Auth)->getAuthList(session('ADMIN_ID'),1);
-      if(in_array($rule,$AuthList)){
-        return true;
-      }else{
-        return false;
-      } 
    }
    /**
     * [getTree 获取菜单的树型结构数据]
@@ -79,7 +69,9 @@ class AdminNode extends Model
                 $row['level'] = $level;
                 $row['son']   = $this->getTree($data,$row['nid'],$level+1);
                 $row['is_son'] = empty($row['son']) ? false : true;
-                $tempArr[] = $row;
+                if(!empty($row['son']) || isset($row['url'])){
+                  $tempArr[] = $row;
+                }
            }
        }
 

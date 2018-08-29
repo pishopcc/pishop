@@ -75,7 +75,8 @@ class Login extends AdminBase
      */
     public function loginout()
     {
-       session('ADMIN_ID',null);
+       // session('ADMIN_ID',null);
+       session(null);
        return redirect(url('/', [], false, true));
     }
 }

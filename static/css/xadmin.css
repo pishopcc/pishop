@@ -510,4 +510,7 @@ table th, table td {
 		margin: 10px;
 	}
 }
+.disabled{
+	color:#CCCCCC;
+}
 

@@ -63,7 +63,7 @@ class AdminBase extends Base
 
         if (!in_array($rule, $notRequire)) {
 
-            return (new Auth)->check($adminId,$rule);
+            return (new Auth)->check($rule,$adminId);
 
         } else {
             return true;

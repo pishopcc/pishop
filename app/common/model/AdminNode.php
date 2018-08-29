@@ -10,7 +10,7 @@
 // | Author: zhibinm <113664000@qq.com> Date: 2018-04-27 16:06:35
 // +---------------------------------------------------------------------
 // 
-namespace app\admin\model;
+namespace app\common\model;
 
 use think\Model;
 use think\Cache;
@@ -22,6 +22,9 @@ use pishop\lib\Auth;
 class AdminNode extends Model
 {
     
-   
+   public function rules()
+   {
+        return $this->hasMany('auth_rule','nid','nid');
+   }
 
 }

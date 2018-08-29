@@ -5,7 +5,7 @@
  * @Date:   2018-04-20 15:25:48 
  * @Copyright:   xuebingsi
  * @Last Modified by:   zhibinm
- * @Last Modified time: 2018-08-28 11:21:20
+ * @Last Modified time: 2018-08-28 11:54:42
  */
 //------------------------
 // pishop 助手函数
@@ -105,13 +105,12 @@ function hook($hook, &$params = null, $extra = null)
  * @return [type]          [description]
  */
 function pishop_del_file($path,$delDir = FALSE) {
-    if(!is_dir($path))
-                return FALSE;       
+    if(!is_dir($path)) return FALSE;       
     $handle = @opendir($path);
     if ($handle) {
         while (false !== ( $item = readdir($handle) )) {
             if ($item != "." && $item != "..")
-                is_dir("$path/$item") ? delFile("$path/$item", $delDir) : unlink("$path/$item");
+                is_dir("$path/$item") ? pishop_del_file("$path/$item", $delDir) : unlink("$path/$item");
         }
         closedir($handle);
         if ($delDir) return rmdir($path);

@@ -5,11 +5,11 @@
  * @Date:   2018-04-20 16:24:37 
  * @Copyright:   xuebingsi
  * @Last Modified by:   zhibinm
- * @Last Modified time: 2018-08-28 10:18:13
+ * @Last Modified time: 2018-08-28 13:12:39
  */
 namespace app\admin\controller;
 use pishop\controller\AdminBase;
-use app\admin\model\User;
+use app\common\model\User;
 use think\Request;
 use think\Config;
 
