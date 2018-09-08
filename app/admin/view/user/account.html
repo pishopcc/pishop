@@ -1,0 +1,36 @@
+ <body class="layui-anim">
+    <div class="x-body">
+      <table class="layui-hide" id="account" lay-filter="account"></table>
+    </div>
+    <script type="text/html" id="toolbar">
+      <div class="layui-btn-container">
+        <a href="{:pishop_url('admin/user/account_edit',['uid'=>input('uid'),'type'=>'balance'])}" class="layui-btn layui-btn-danger layui-btn-sm"><i class="layui-icon">&#xe654;</i>资金调节</a>
+        <a href="{:pishop_url('admin/user/account_edit',['uid'=>input('uid'),'type'=>'frozen_money'])}" class="layui-btn layui-btn-danger layui-btn-sm"><i class="layui-icon">&#xe654;</i>冻结金额</a>
+      </div>
+    </script>
+    <script>
+      layui.use(['table','form'], function(){
+        var table = layui.table;
+        var form = layui.form;
+
+        table.render({
+          elem: '#account'
+          ,url:'{:pishop_url('admin/user/account',['uid'=>input('uid')])}'
+          ,toolbar: '#toolbar'
+          ,title:'收货地址'
+          ,defaultToolbar: ['filter', 'print', 'exports']
+          ,cols: [[
+            {field:'lid', title: 'LID',width:60}
+            ,{field:'change_time', title: '变动时间'}
+            ,{field:'desc', title: '描述'}
+            ,{field:'balance', title: '用户资金'}
+            ,{field:'score', title: '用户积分'}
+          ]],
+          id:'account'
+          ,page: true
+        });
+      });
+      </script>
+  </body>
+
+</html>

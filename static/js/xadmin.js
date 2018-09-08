@@ -86,6 +86,26 @@ $(function () {
         $('.layui-tab-title li').eq(0).find('i').remove();
     });
 
+    $("tbody.x-cate tr[fid!='0']").hide();
+    // 栏目多级显示效果
+    $('.x-show').click(function () {
+        if($(this).attr('status')=='true'){
+            $(this).html('&#xe625;'); 
+            $(this).attr('status','false');
+            cateId = $(this).parents('tr').attr('cate-id');
+            $("tbody tr[fid="+cateId+"]").show();
+       }else{
+            cateIds = [];
+            $(this).html('&#xe623;');
+            $(this).attr('status','true');
+            cateId = $(this).parents('tr').attr('cate-id');
+            getCateId(cateId);
+            for (var i in cateIds) {
+                $("tbody tr[cate-id="+cateIds[i]+"]").hide().find('.x-show').html('&#xe623;').attr('status','true');
+            }
+       }
+    })
+
     //左侧菜单效果
     // $('#content').bind("click",function(event){
     $('.left-nav #nav li').click(function (event) {
@@ -132,6 +152,16 @@ $(function () {
     
 })
 
+var cateIds = [];
+function getCateId(cateId) {
+    
+    $("tbody tr[fid="+cateId+"]").each(function(index, el) {
+        id = $(el).attr('cate-id');
+        cateIds.push(id);
+        getCateId(id);
+    });
+}
+
 /*弹出层*/
 /*
     参数解释：
@@ -141,7 +171,7 @@ $(function () {
     w       弹出层宽度（缺省调默认值）
     h       弹出层高度（缺省调默认值）
 */
-function x_admin_show(title,url,w,h){
+function x_admin_show(title,url,w,h,full){
     if (title == null || title == '') {
         title=false;
     };
@@ -154,7 +184,7 @@ function x_admin_show(title,url,w,h){
     if (h == null || h == '') {
         h=($(window).height() - 50);
     };
-    layer.open({
+    index = layer.open({
         type: 2,
         area: [w+'px', h +'px'],
         fix: false, //不固定
@@ -162,14 +192,36 @@ function x_admin_show(title,url,w,h){
         shadeClose: true,
         shade:0.4,
         title: title,
-        content: url
+        content: url,
+        success: function(layero, index){
+            
+        }
     });
+    if(full){
+        layer.full(index);
+    }
 }
 
 /*关闭弹出框口*/
 function x_admin_close(){
     var index = parent.layer.getFrameIndex(window.name);
     parent.layer.close(index);
+}
+
+function fmtDate(inputTime){
+    var date = new Date(inputTime*1000);
+    var y = date.getFullYear();  
+    var m = date.getMonth() + 1;  
+    m = m < 10 ? ('0' + m) : m;  
+    var d = date.getDate();  
+    d = d < 10 ? ('0' + d) : d;  
+    var h = date.getHours();
+    h = h < 10 ? ('0' + h) : h;
+    var minute = date.getMinutes();
+    var second = date.getSeconds();
+    minute = minute < 10 ? ('0' + minute) : minute;  
+    second = second < 10 ? ('0' + second) : second; 
+    return y + '-' + m + '-' + d+' '+h+':'+minute+':'+second;
 }
 
 

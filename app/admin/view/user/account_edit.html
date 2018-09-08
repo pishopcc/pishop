@@ -1,0 +1,112 @@
+<body>
+    <div class="x-body">
+        <form class="layui-form">
+          
+          {if condition="input('type')=='balance'"}
+          <div class="layui-form-item">
+              <label for="L_email" class="layui-form-label">
+                  <span class="x-red">*</span>金额
+              </label>
+              <div class="layui-input-inline" style="width: 80px">
+                  <select name="balance_type">
+                    <option value="1">增加</option>
+                    <option value="0">减少</option>
+                  </select>
+              </div>
+              <div class="layui-input-inline">
+                  <input type="text"  name="balance" required="" lay-verify="number"
+                  autocomplete="off" class="layui-input" onkeyup="this.value=/^\d+\.?\d{0,2}$/.test(this.value) ? this.value : ''" value="0">
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                  <span class="x-red">*</span>可用余额：￥{$user.balance},单位：元
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_email" class="layui-form-label">
+                  <span class="x-red">*</span>积分
+              </label>
+              <div class="layui-input-inline" style="width: 80px">
+                  <select name="score_type">
+                    <option value="1">增加</option>
+                    <option value="0">减少</option>
+                  </select>
+              </div>
+              <div class="layui-input-inline">
+                  <input type="text"  name="score" onkeyup="this.value=/^\d+\.?\d{0,2}$/.test(this.value) ? this.value : ''" required="" lay-verify="number"
+                  autocomplete="off" value="0" class="layui-input">
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                  <span class="x-red">*</span>可用积分：{$user.score},单位：整数
+              </div>
+          </div>
+          {else/}
+          <div class="layui-form-item">
+              <label for="L_email" class="layui-form-label">
+                  <span class="x-red">*</span>冻结资金
+              </label>
+              <div class="layui-input-inline" style="width: 80px">
+                  <select name="frozen_money_type">
+                    <option value="1">增加</option>
+                    <option value="0">减少</option>
+                  </select>
+              </div>
+              <div class="layui-input-inline">
+                  <input type="text"  name="frozen_money" onkeyup="this.value=/^\d+\.?\d{0,2}$/.test(this.value) ? this.value : ''" value="0" required="" lay-verify="number"
+                  autocomplete="off" class="layui-input">
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                  <span class="x-red">*</span> 可冻结余额：￥{$user.balance},可解冻金额：￥{$user.frozen_money},单位：元
+              </div>
+          </div>
+          {/if}
+
+          <div class="layui-form-item">
+              <label for="L_pass" class="layui-form-label">
+                  <span class="x-red">*</span>等级描述
+              </label>
+              <div class="layui-input-inline" style="width: 280px">
+                  <textarea name="desc" lay-verify="required" class="layui-textarea"></textarea>
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                 请输入操作备注
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_repass" class="layui-form-label">
+              </label>
+              <input type="hidden" value="{$user.uid}" name="uid">
+              <button  class="layui-btn" lay-filter="add" lay-submit="">
+                  确认提交
+              </button>
+              <p class="layui-btn layui-btn-danger" onclick="history.back()">返回</p>
+          </div>
+      </form>
+    </div>
+    <script>
+        layui.use(['form','layer'], function(){
+            $ = layui.jquery;
+          var form = layui.form
+          ,layer = layui.layer;
+
+          //监听提交
+          form.on('submit(add)', function(data){
+            data.field.type = "{:input('type')}";
+            $.post('{:pishop_url('admin/user/account_edit')}', data.field, function(response, textStatus, xhr) {
+                if(response.code==0){
+                  layer.msg(response.msg,function(){});
+                }else{
+                  layer.alert(response.msg, {icon: 6},function(){
+                      history.back()
+                  });
+                }
+            });
+           
+            return false;
+          });
+          
+          
+        });
+    </script>
+  </body>
+
+</html>

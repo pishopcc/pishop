@@ -1,0 +1,92 @@
+<body>
+    <div class="x-body">
+        <form class="layui-form">
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  <span class="x-red">*</span>等级名称
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text"  name="level_name" required="" lay-verify="required"
+                  autocomplete="off"  class="layui-input">
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                  <span class="x-red">*</span>设置会员等级名称
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_email" class="layui-form-label">
+                  <span class="x-red">*</span>消费额度
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text"  name="amount" required="" lay-verify="number"
+                  autocomplete="off" class="layui-input">
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                  <span class="x-red">*</span>设置会员等级所需要的消费额度,单位：元
+              </div>
+             
+          </div>
+          <div class="layui-form-item">
+              <label for="L_pass" class="layui-form-label">
+                  <span class="x-red">*</span>折扣率
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text"  name="discount" 
+                  autocomplete="off"  lay-verify="number" class="layui-input">
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                  折扣率单位为百分比，如输入90，表示该会员等级的用户可以以商品原价的90%购买
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_pass" class="layui-form-label">
+                  <span class="x-red">*</span>等级描述
+              </label>
+              <div class="layui-input-inline">
+                  <textarea name="describe" class="layui-textarea"></textarea>
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                 会员等级描述信息
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_repass" class="layui-form-label">
+              </label>
+              <button  class="layui-btn" lay-filter="add" lay-submit="">
+                  增加
+              </button>
+          </div>
+      </form>
+    </div>
+    <script>
+        layui.use(['form','layer'], function(){
+            $ = layui.jquery;
+          var form = layui.form
+          ,layer = layui.layer;
+
+          //监听提交
+          form.on('submit(add)', function(data){
+            console.log(data);
+            $.post('{:pishop_url('admin/user/leveledit')}', data.field, function(response, textStatus, xhr) {
+                if(response.code==0){
+                  layer.msg(response.msg,function(){});
+                }else{
+                  layer.alert(response.msg, {icon: 6},function(){
+                      // 获得frame索引
+                      var index = parent.layer.getFrameIndex(window.name);
+                      //关闭当前frame
+                      parent.layer.close(index);
+                      parent.location.reload();
+                  });
+                }
+            });
+           
+            return false;
+          });
+          
+          
+        });
+    </script>
+  </body>
+
+</html>

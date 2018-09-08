@@ -11,10 +11,12 @@
 // +---------------------------------------------------------------------
 namespace pishop\controller;
 
-use think\Controller;
-use think\View;
 use think\Config;
+use think\Controller;
 use think\Request;
+use think\Response;
+use think\View;
+use think\exception\HttpResponseException;
 /**
  * pishop控制器基类
  */
@@ -56,6 +58,29 @@ class Base extends Controller
 
     protected function _addCopyright()
     {
-        config('title',config('site_name') . '-Powered by Pi-CMS');
+        config('title',config('site_name') . '-Powered by PiShop');
+    }
+    /**
+     * [ajaxpage 异步分页数据返回]
+     * @param  string  $msg    [description]
+     * @param  [type]  $count  [description]
+     * @param  string  $data   [description]
+     * @param  integer $wait   [description]
+     * @param  array   $header [description]
+     * @return [type]          [description]
+     */
+    protected function ajaxpage($data,$header=[])
+    {
+        $type = $this->getResponseType();
+
+        $result = [
+            'code'=>0,
+            'count'=>$data->total(),
+            'data'=>$data->items(),
+        ];
+
+        $response = Response::create($result, $type)->header($header);
+
+        throw new HttpResponseException($response);
     }
 }

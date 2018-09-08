@@ -1,0 +1,119 @@
+<body>
+    <div class="x-body">
+      <div class="layui-tab">
+        <ul class="layui-tab-title">
+          <li class="layui-this">发送给以下会员</li>
+          <!-- <li>发送给全部会员</li> -->
+        </ul>
+        <div class="layui-tab-content">
+          <div class="layui-tab-item layui-show">
+            <form class="layui-form">
+              <div class="layui-form-item">
+                  <label for="L_email" class="layui-form-label">
+                      <span class="x-red">*</span>会员列表
+                  </label>
+                  <div class="layui-input-inline" style="width: 280px;">
+                      <select name="email" lay-verify="required" xm-select="selectId" xm-select-search="{:pishop_url('admin/user/search',['type'=>'email'])}">
+                            {foreach  name='users' id = 'user' key="email"}
+                                <option value="{$email}" selected="">{$user}</option>
+                            {/foreach}
+                      </select>
+                  </div>
+              </div>
+              <div class="layui-form-item">
+                  <label for="L_pass" class="layui-form-label">
+                      <span class="x-red">*</span>邮件标题
+                  </label>
+                  <div class="layui-input-inline" style="width: 280px">
+                      <input type="text" lay-verify="required" name="title" class="layui-input"> 
+                  </div>
+                  <div class="layui-form-mid layui-word-aux">
+                     请输入操作备注
+                  </div>
+              </div>
+              <div class="layui-form-item">
+                  <label for="L_pass" class="layui-form-label">
+                      <span class="x-red">*</span>邮件内容
+                  </label>
+                  <div class="layui-input-inline" style="width: 280px">
+                      <textarea name="content" lay-verify="required" class="layui-textarea"></textarea>
+                  </div>
+                  <div class="layui-form-mid layui-word-aux">
+                     请输入操作备注
+                  </div>
+              </div>
+              <div class="layui-form-item">
+                  <label for="L_repass" class="layui-form-label">
+                  </label>
+                  <input type="hidden" name="type" value="0">
+                  <button  class="layui-btn" lay-filter="add" lay-submit="">
+                      确认提交
+                  </button>
+              </div>
+          </form>
+          </div>
+          <div class="layui-tab-item">
+             <form class="layui-form">
+              <div class="layui-form-item">
+                  <label for="L_pass" class="layui-form-label">
+                      <span class="x-red">*</span>发送内容
+                  </label>
+                  <div class="layui-input-inline" style="width: 280px">
+                      <textarea name="content" lay-verify="required" class="layui-textarea"></textarea>
+                  </div>
+                  <div class="layui-form-mid layui-word-aux">
+                     请输入操作备注
+                  </div>
+              </div>
+              <div class="layui-form-item">
+                  <label for="L_repass" class="layui-form-label">
+                  </label>
+                  <input type="hidden" name="type" value="1">
+                  <button  class="layui-btn" lay-filter="add" lay-submit="">
+                      确认提交
+                  </button>
+              </div>
+          </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <link rel="stylesheet" href="__STATIC__css/formSelects-v4.css">
+    <script src="__STATIC__js/formSelects-v4.min.js"></script>
+    <script>
+        layui.use(['form','layer','element'], function(){
+            $ = layui.jquery;
+          var form = layui.form
+          ,layer = layui.layer;
+          var element = layui.element;
+          var formSelects = layui.formSelects;
+
+          formSelects.render('selectId',{delay: 500});
+
+          //监听提交
+          form.on('submit(add)', function(data){
+
+            console.log();
+            $.post('{:pishop_url('admin/user/sendMail')}', data.field, function(response, textStatus, xhr) {
+                if(response.code==0){
+                  layer.msg(response.msg,function(){});
+                }else{
+                  layer.alert(response.msg, {icon: 6},function(){
+                      // 获得frame索引
+                      var index = parent.layer.getFrameIndex(window.name);
+                      //关闭当前frame
+                      parent.layer.close(index);
+                  });
+                }
+            });
+           
+            return false;
+          });
+          
+          
+        });
+    </script>
+  </body>
+
+</html>

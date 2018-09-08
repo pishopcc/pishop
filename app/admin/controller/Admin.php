@@ -82,6 +82,8 @@ class Admin extends AdminBase{
 
                     $postData['password'] = pishop_md5($postData['password']); 
 
+                    $postData['type'] = '1';
+
                     $user = new UserModel($postData);
                     // 过滤post数组中的非数据表字段数据
                     $user->save();

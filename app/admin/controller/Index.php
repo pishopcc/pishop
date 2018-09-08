@@ -111,9 +111,9 @@ class Index extends AdminBase
 
             $user = UserModel::get($postData['admin_id']);
 
-            session('ADMIN_ID',$postData['admin_id']);
+            session(null);
 
-            session('_AUTH_LIST_',null);
+            session('ADMIN_ID',$postData['admin_id']);
 
             $AuthList = (new Auth)->getAuthList(session('ADMIN_ID'),1);
 
@@ -130,6 +130,8 @@ class Index extends AdminBase
 
     public function welcome()
     {
+        $countData['article_total'] = Db::name('article')->where('delete_time','null')->cache(true,3600)->count();
+        $countData['user_total'] = Db::name('user')->where('delete_time','null')->cache(true,3600)->count();
         $mysql = Db::query("select VERSION() as version");
         $mysql = $mysql[0]['version'];
         $mysql = empty($mysql) ? lang('UNKNOWN') : $mysql;
@@ -148,7 +150,8 @@ class Index extends AdminBase
             '剩余空间'       => round((@disk_free_space(".") / (1024 * 1024)), 2) . 'M',
         ];
 
-        $this->assign('sys_info',$info);
+        $this->assign('sys_info',$info);   
+        $this->assign('countData',$countData);   
         return $this->fetch();
     }
 }

@@ -19,8 +19,9 @@ use app\common\model\User as UserModel;
 class User extends Validate
 {
     protected $rule = [
-        'nickname'  =>  'require|unique:user|length:5,8',
+        'nickname'  =>  'require|unique:user|min:2',
         'email' =>  'require|email|unique:user',
+        'mobile' =>  'require|regex:1\d{10}|unique:user',
         'oldpass'=>'require|checkPassword',
         'password'=>'require|length:6,15',
         'role'=>'require|array'
@@ -29,14 +30,16 @@ class User extends Validate
     protected $message = [
         'nickname.require'  =>  '用户名必须',
         'nickname.unique'   =>  '用户名已经存在',
-        'nickname.length'   =>  '用户名长度在5-8位',
+        'nickname.min'   =>  '用户名长度最小2',
         'email.email'       =>  '邮箱格式错误',
         'email.unique'      =>  '邮箱已经存在',
         'email.require'     =>  '邮箱必须',
+        'mobile.regex'       =>  '手机格式错误',
+        'mobile.unique'      =>  '手机已经存在',
+        'mobile.require'     =>  '手机必须',
         'oldpass.require'   =>  '原密码必须',
         'password.require'   =>  '新密码必须',
         'password.length'   =>  '新密码必须长度6-15',
-        'password.confirm'   =>  '重复密码不一致',
         'role.require'=>'角色必须选'
     ];
 
@@ -44,7 +47,9 @@ class User extends Validate
         'adminEdit'  =>  ['nickname','email'],
         'changePassword'=>['oldpass','password'],
         'addAdmin'=>['nickname','email','password','role'],
-        'editAdmin'=>['nickname','email','role']
+        'editAdmin'=>['nickname','email','role'],
+        'editUser'=>['email','mobile'],
+        'addUser'=>['email','mobile','password','nickname']
     ];
 
 

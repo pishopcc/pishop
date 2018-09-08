@@ -1,0 +1,49 @@
+ <body class="layui-anim">
+    <div class="x-body">
+      <table class="layui-hide" id="address" lay-filter="user"></table>
+    </div>
+    <script type="text/html" id="checkboxTpl">
+      <input type="radio" name="default" value="{{d.aid}}" title="" lay-filter="lockDemo" {{ d.is_default == 1 ? 'checked' : '' }}>
+    </script>
+    <script>
+      layui.use(['table','form'], function(){
+        var table = layui.table;
+        var form = layui.form;
+
+        table.render({
+          elem: '#address'
+          ,url:'{:pishop_url('admin/user/address',['uid'=>input('uid')])}'
+          ,toolbar: '#toolbar'
+          ,title:'收货地址'
+          ,defaultToolbar: ['filter', 'print', 'exports']
+          ,cols: [[
+            {field:'aid', title: 'AID'}
+            ,{field:'consignee', title: '收货人'}
+            ,{field:'mobile', title: '联系方式'}
+            ,{field:'zipcode', title: '邮政编码'}
+            ,{field:'province', title: '地址',width:500,templet:function(d){
+              return d.province+d.city+d.district+d.twon+d.address;
+            }}
+            ,{field:'default', title:'是否默认', width:110, templet: '#checkboxTpl', unresize: true}
+          ]],
+          id:'address'
+          ,page: true
+        });
+
+         //监听锁定操作
+        form.on('radio(lockDemo)', function(obj){
+          $.post('{:pishop_url('admin/user/address_status',['uid'=>input('uid')])}', {aid: this.value}, function(res, textStatus, xhr) {
+              if(res.code==1){
+                layer.msg(res.msg, {icon: 1},function(){
+                });
+              }else{
+                layer.msg(res.msg, function(){});
+              }
+          });
+        });
+
+      });
+      </script>
+  </body>
+
+</html>

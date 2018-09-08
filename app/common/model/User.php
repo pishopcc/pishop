@@ -1,12 +1,14 @@
 <?php
-
-/**
- * @Author: zhibinm (113664000@qq.com)
- * @Date:   2018-04-20 16:20:59 
- * @Copyright:   xuebingsi
- * @Last Modified by:   zhibinm
- * @Last Modified time: 2018-08-28 17:06:19
- */
+// +---------------------------------------------------------------------
+// | PiShop [ WE CAN DO IT MORE EASY ]
+// +---------------------------------------------------------------------
+// | Copyright (c) 2018-2020 http://www.pishop.cc All rights reserved.
+// +---------------------------------------------------------------------
+// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
+// +---------------------------------------------------------------------
+// | Author: zhibinm <113664000@qq.com> Date: 2018-04-27 16:06:35
+// +---------------------------------------------------------------------
+// 
 namespace app\common\model;
 use think\Model;
 use traits\model\SoftDelete;
@@ -19,5 +21,10 @@ class User extends Model
 	public function roles()
     {
         return $this->belongsToMany('auth_role','auth_role_user','roid','uid');
+    }
+
+    public function userlevel()
+    {
+        return $this->hasOne('user_level','lid','level');
     }
 }
