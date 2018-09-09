@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:72:"C:\phpStudy\PHPTutorial\WWW\pishop/./app/admin\view\article\article.html";i:1536369856;s:61:"C:\phpStudy\PHPTutorial\WWW\pishop\app\admin\view\layout.html";i:1524489111;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:72:"C:\phpStudy\PHPTutorial\WWW\pishop/./app/admin\view\article\article.html";i:1536480740;s:61:"C:\phpStudy\PHPTutorial\WWW\pishop\app\admin\view\layout.html";i:1536473608;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,10 +11,10 @@
 
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="/static/css/font.css">
-    <link rel="stylesheet" href="/static/css/xadmin.css">
+    <link rel="stylesheet" href="/static/css/xadmin.css?id=<?php echo time(); ?>">
     <script type="text/javascript" src="/static/js/jquery.min.js"></script>
     <script src="/static/lib/layui/layui.js" charset="utf-8"></script>
-    <script type="text/javascript" src="/static/js/xadmin.js"></script>
+    <script type="text/javascript" src="/static/js/xadmin.js?id=<?php echo time(); ?>"></script>
 </head>
 <style>
     .layui-form .layui-input-inline{
@@ -105,6 +105,22 @@
               </label>
               <div class="layui-input-inline">
                  <input type="checkbox"  name="is_open" checked="" lay-skin="switch" lay-text="是|否">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  <span class="x-red"></span>主图
+              </label>
+              <div class="layui-input-block">
+                <ul class="layui-upload-list" id="weUploader" data-num='5' data-savetype='article' data-action="uploadimage" data-url="<?php echo pishop_url('admin/ueditor/uploader'); ?>">
+                    <!-- <li>
+                      <img class="layui-upload-img" src="http://www.pishop.com/upload/article/20180908/1536388106532174.jpg" alt="">
+                      <input type="hidden" name="files[]" value="http://www.pishop.com/upload/article/20180908/1536388106532174.jpg">
+                    </li> -->
+                </ul>
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                  <span class="x-red">*</span>双击可以删除
               </div>
           </div>
           <div class="layui-form-item" style="position: relative;z-index: 1">

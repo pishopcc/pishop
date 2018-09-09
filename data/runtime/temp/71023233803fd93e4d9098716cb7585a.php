@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:70:"C:\phpStudy\PHPTutorial\WWW\pishop/./app/admin\view\article\index.html";i:1536320295;s:61:"C:\phpStudy\PHPTutorial\WWW\pishop\app\admin\view\layout.html";i:1524489111;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:70:"C:\phpStudy\PHPTutorial\WWW\pishop/./app/admin\view\article\index.html";i:1536320295;s:61:"C:\phpStudy\PHPTutorial\WWW\pishop\app\admin\view\layout.html";i:1536473608;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,10 +11,10 @@
 
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="/static/css/font.css">
-    <link rel="stylesheet" href="/static/css/xadmin.css">
+    <link rel="stylesheet" href="/static/css/xadmin.css?id=<?php echo time(); ?>">
     <script type="text/javascript" src="/static/js/jquery.min.js"></script>
     <script src="/static/lib/layui/layui.js" charset="utf-8"></script>
-    <script type="text/javascript" src="/static/js/xadmin.js"></script>
+    <script type="text/javascript" src="/static/js/xadmin.js?id=<?php echo time(); ?>"></script>
 </head>
  <body class="layui-anim">
     <div class="x-nav">

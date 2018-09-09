@@ -738,19 +738,20 @@ table {
 .fileWarp ul li{
     padding: 5px;
     float: right;
+    position: relative;
 }
 .fileWarp img{
     width: 39px;
     height: 39px;
-    border: 1px solid #ccc;
+    border: 1px solid #CFCFCF;
 }
 .fileWarp .title{
     width: 50px;
-    height: 50px;
-    background: #5FB777 url() 0 0 no-repeat;
+    height: 38px;
+    background: #009688 url() 0 0 no-repeat;
     color: #fff;
     text-align: center;
-    line-height: 50px;
+    line-height: 38px;
 }
 .fileWarp ul li a{
     display: none;

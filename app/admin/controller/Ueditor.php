@@ -34,10 +34,13 @@ class Ueditor extends AdminBase
 
 	public function uploader()
 	{
+		$num = input('num') ? input('num'):$this->error('数量不对');
+		$article = input('savetype') ? input('savetype'):$this->error('存储类型不对');
+		$uploadimage = input('action') ? input('action'):$this->error('上传类型不对');
 		$info = [
-			'num'=>15,
-			'savetype'=>'article',
-			'action'=>'uploadimage'
+			'num'=>$num,
+			'savetype'=>$article,
+			'action'=>$uploadimage
 		];
 		$this->assign('info',$info);
 		return $this->fetch();

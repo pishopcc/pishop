@@ -149,6 +149,24 @@ $(function () {
         event.stopPropagation();
          
     })
+
+    $(document).on('click', '#weUploader', function(event) {
+        data = $(this).data();
+        if($("#weUploader li").length>=data.num){
+            layer.msg("最多只能上传"+data.num+"个");
+            return;
+        }
+        num = data.num-$("#weUploader li").length;
+        x_admin_show('选择图片',data.url+"?num="+num+"&savetype="+data.savetype+"&action="+data.action);
+    });
+
+    $("#weUploader").on('click', 'li', function(event) {
+        // $(this).remove();
+        return false;
+    });
+    $("#weUploader").on('dblclick', 'li', function(event) {
+        $(this).remove();
+    });
     
 })
 

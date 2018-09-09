@@ -512,4 +512,35 @@ table th, table td {
 .disabled{
 	color:#CCCCCC;
 }
+#weUploader{
+	
+	float: left;
+}
+#weUploader:after{
+	line-height: 60px;
+	content:'\e654';
+	font-family: layui-icon!important;
+	font-size: 50px;
+    color:  #5FB878;
+    text-align: center;
+    cursor: pointer;
+    margin: 5px 10px;
+    width: 60px;
+    height: 60px;
+	padding: 2px;
+	border: 1px solid #cfcfcf;
+	display: block;
+	float: left;
+	font-weight: 200;
+}
+#weUploader li{
+	float: left;
+	margin: 5px 10px;
+	padding: 2px;
+	border: 1px solid #cfcfcf;
+}
+#weUploader li img{
+	width: 60px;
+	height: 60px;
+}
 

@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:73:"C:\phpStudy\PHPTutorial\WWW\pishop/./app/admin\view\ueditor\uploader.html";i:1536397224;s:61:"C:\phpStudy\PHPTutorial\WWW\pishop\app\admin\view\layout.html";i:1524489111;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:73:"C:\phpStudy\PHPTutorial\WWW\pishop/./app/admin\view\ueditor\uploader.html";i:1536477025;s:61:"C:\phpStudy\PHPTutorial\WWW\pishop\app\admin\view\layout.html";i:1536473608;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,10 +11,10 @@
 
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="/static/css/font.css">
-    <link rel="stylesheet" href="/static/css/xadmin.css">
+    <link rel="stylesheet" href="/static/css/xadmin.css?id=<?php echo time(); ?>">
     <script type="text/javascript" src="/static/js/jquery.min.js"></script>
     <script src="/static/lib/layui/layui.js" charset="utf-8"></script>
-    <script type="text/javascript" src="/static/js/xadmin.js"></script>
+    <script type="text/javascript" src="/static/js/xadmin.js?id=<?php echo time(); ?>"></script>
 </head>
 <body>
 	<link rel="stylesheet" type="text/css" href="/static//webuploader/webuploader.css">
@@ -45,7 +45,7 @@
 						<div class="queueList">
 							<div id="dndArea" class="placeholder">
 								<div id="filePicker"></div>
-								<p>或将文件拖到这里，本次最多可选2个</p>
+								<p>或将文件拖到这里，本次最多可选<?php echo $info['num']; ?>个</p>
 							</div>
 						</div>
 					</div>
@@ -58,7 +58,7 @@
             		<div class="info">选择要插入的图片</div>
 					<ul class="choose-btns btns" style="position: absolute;">
 						<li class="btn sure checked layui-btn">选择</li>
-						<li class="btn cancel layui-btn layui-btn-danger" onclick="x_admin_close()">取消</li>
+						<li class="layui-btn savebtn">确定使用</li>
 					</ul>
 				</div>
 			</div>
@@ -88,9 +88,7 @@
 			<fieldset>
 				<p class="title">选中</p>
 				<ul>
-					<li class="img"><img src="/upload/article/20180908/1536388106550075.jpg" width="100" height="100" onerror="this.src='/public/plugins/uploadify/nopic.png'"><input type="hidden" name="fileurl_tmp[]" value="/upload/article/20180908/1536388106550075.jpg"><a href="javascript:void(0);">删除</a></li>
-					<li class="img"><img src="/upload/article/20180908/1536388106550075.jpg" width="100" height="100" onerror="this.src='/public/plugins/uploadify/nopic.png'"><input type="hidden" name="fileurl_tmp[]" value="/upload/article/20180908/1536388106550075.jpg"><a href="javascript:void(0);">删除</a></li>
-					<li class="img"><img src="/upload/article/20180908/1536388106550075.jpg" width="100" height="100" onerror="this.src='/public/plugins/uploadify/nopic.png'"><input type="hidden" name="fileurl_tmp[]" value="/upload/article/20180908/1536388106550075.jpg"><a href="javascript:void(0);">删除</a></li>
+					
 				</ul>
 			</fieldset>
 	   </div>
@@ -136,6 +134,14 @@
 			     Manager.checkFile($(this));
 			});
 
+			$(".fileWarp").on("dblclick","li", function() {
+			     $(this).remove();
+			});
+
+			layer.tips('双击图片取消选中', '.fileWarp .title', {
+			  tips: [4],time:0
+			});
+
 
         });
     </script>
@@ -175,14 +181,38 @@
 		});
 
 		$(".statusBar .savebtn").click(function(){
+
+			var filelist = $("input[name^='fileurl_tmp']");
+
+			if(filelist.length==0){
+				layer.confirm('一个都没选择,确定离开?',function(){
+					window.parent.layer.closeAll();
+				})
+				return;
+			}
 			
-			if($("input[name^='fileurl_tmp']").length>chooseNum){
+			if(filelist.length>chooseNum){
 				layer.msg('最多选择'+chooseNum+"个",function(){});
 				return;
 			}
 
-			// alert(8888)
+			var fileurl_tmp = "";
 
+			if(chooseNum > 1){
+				
+				filelist.each(function(){
+					fileurl_tmp += '<li><img class="layui-upload-img" src="'+$(this).val()+'" alt=""><input type="hidden" name="files[]" value="'+$(this).val()+'"></li>';	
+				});
+
+			}else{
+				fileurl_tmp += '<li><img class="layui-upload-img" src="'+filelist.val()+'" alt=""><input type="hidden" name="file" value="'+filelist.val()+'"></li>';
+			}
+
+			$(window.parent.document).find("#weUploader").append(fileurl_tmp);
+
+			window.parent.layer.closeAll();
+
+			// console.log($("input[name^='fileurl_tmp']"));
 			
 		});
 		</script>

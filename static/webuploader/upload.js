@@ -904,47 +904,53 @@ $(function() {
 
 		delFile : function($file){
 
-			if(!confirm('确定删除吗?')) return false;
+			// if(!confirm('确定删除吗?')) return false;
 
-			var url = $file.data('img');
+			that = this;
+			layer.confirm("确定删除吗?",function (argument) {
 
-			$file.find('div.file-panel').css('display', 'none');
+				var url = $file.data('img');
 
-			var data = {filename : url};
+				$file.find('div.file-panel').css('display', 'none');
 
-			data = $.extend(data, this.opts.formData);
+				var data = {filename : url};
 
-			$.ajax({
-			
-				url : this.opts.delPath,
+				data = $.extend(data, that.opts.formData);
 
-				data : data,
+				$.ajax({
+				
+					url : that.opts.delPath,
 
-				success : function(data){
+					data : data,
 
-					if(data == 1){
-					
-						$file.fadeOut(function(){
+					success : function(data){
+
+						if(data == 1){
 						
-							$(this).remove();
+							$file.fadeOut(function(){
+							
+								$(this).remove();
+							
+							});
 						
-						});
+						}else{
+						
+							alert('删除失败');
+						
+						}
+
+						layer.closeAll();
 					
-					}else{
-					
-						alert('删除失败');
-					
+					},
+
+					complete : function(){
+
+						$file.find('div.file-panel').css('display', 'block');
+
 					}
 				
-				},
-
-				complete : function(){
-
-					$file.find('div.file-panel').css('display', 'block');
-
-				}
-			
-			});
+				});
+			})
 		
 		},
 
@@ -966,7 +972,7 @@ $(function() {
 			sLi += '<a href="javascript:void(0);">删除</a>';
 			sLi += '</li>';
 			$(".fileWarp ul").append(sLi);
-			$(".statusBar .savebtn").trigger("click");
+			// $(".statusBar .savebtn").trigger("click");
 		},
 
 		cancel : function(){
@@ -978,17 +984,21 @@ $(function() {
 		},
 		
 		del:function(obj){
-			if(!confirm('确定删除吗?')) return false;
-		    $.get(this.opts.delPath,{filename:$(obj).attr('data-img')},function(res){
-					if(res == 1){
-			    		var id = $(obj).parents('.state-complete').attr('id');
-						removeFileById(id);
-                        $('.'+id).remove();
-					}else{
-						alert("删除失败");
-					}
-	        	}
-		    );
+			that = this;
+			layer.confirm("确定删除吗?",function (argument) {
+				$.get(that.opts.delPath,{filename:$(obj).attr('data-img')},function(res){
+						if(res == 1){
+				    		var id = $(obj).parents('.state-complete').attr('id');
+							removeFileById(id);
+	                        $('.'+id).remove();
+	                        layer.closeAll();
+						}else{
+							alert("删除失败");
+						}
+		        	}
+			    );
+			})
+			// if(!confirm('确定删除吗?')) return false;
 		}
 	};
 
