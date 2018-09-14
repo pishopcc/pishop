@@ -5,7 +5,7 @@
  * @Date:   2018-04-20 15:25:48 
  * @Copyright:   xuebingsi
  * @Last Modified by:   zhibinm
- * @Last Modified time: 2018-08-28 11:54:42
+ * @Last Modified time: 2018-09-13 10:17:33
  */
 //------------------------
 // pishop 助手函数
@@ -121,4 +121,16 @@ function pishop_del_file($path,$delDir = FALSE) {
             return FALSE;
         }
     }
+}
+
+/**
+ * 格式化字节大小
+ * @param  number $size      字节数
+ * @param  string $delimiter 数字和单位分隔符
+ * @return string            格式化后的带单位的大小
+ */
+function pishop_format_bytes($size, $delimiter = '') {
+    $units = array('B', 'KB', 'MB', 'GB', 'TB', 'PB');
+    for ($i = 0; $size >= 1024 && $i < 5; $i++) $size /= 1024;
+    return round($size, 2) . $delimiter . $units[$i];
 }

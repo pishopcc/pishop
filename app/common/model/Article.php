@@ -18,4 +18,8 @@ class Article extends Model
 	use SoftDelete;
     protected $deleteTime = 'delete_time';
 	protected $autoWriteTimestamp = true;
+	public function getContentAttr($value)
+    {
+        return htmlspecialchars_decode($value);
+    }
 }

@@ -1,0 +1,188 @@
+<style>
+    .layui-form .layui-input-inline{
+        width: 300px;
+    }
+</style>
+<body>
+    <div class="x-body">
+        <form class="layui-form">
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  <span class="x-red">*</span>广告标题
+              </label>
+              <div class="layui-input-inline">
+                 <input type="text" name="ad_title" required="" lay-verify="required" 
+                  autocomplete="off" value="{$ad.ad_title?$ad.ad_title:''}"  class="layui-input">
+              </div>
+          </div>
+          <div class="layui-form-item" style="position: relative;z-index: 88">
+              <label for="L_pass" class="layui-form-label">
+                  <span class="x-red">*</span>所属分类
+              </label>
+              <div class="layui-input-inline">
+                  <select name="position_id">
+                        {volist name="positionList" id='position'}
+                        <option {:isset($ad) && $ad.position_id==$position.position_id?'selected':''}  value="{$position.position_id}">{$position.position_name}</option>
+                        {/volist}
+                  </select>
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                  <span class="x-red">*</span>当选择发布"商城公告"时，还需要设置下面的"出现位置"项
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  广告类型
+              </label>
+              <div class="layui-input-inline">
+                 <select name="media_type" id="">
+                   <option value="0" {isset($ad) && $ad.media_type=='0'?'selected':''}>图片</option>
+                   <option value="1" {isset($ad) && $ad.media_type=='1'?'selected':''}>文字</option>
+                   <option value="2" {isset($ad) && $ad.media_type=='2'?'selected':''}>动画</option>
+                 </select>
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  <span class="x-red">*</span>广告链接
+              </label>
+              <div class="layui-input-inline">
+                 <input type="url" name="ad_link"  required=""  value="{$ad.ad_link?$ad.ad_link:''}" 
+                  autocomplete="off"  class="layui-input">
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                  <span class="x-red">*</span>链接格式请以http://开头
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  <span class="x-red"></span>广告图片
+              </label>
+              <div class="layui-input-block">
+                <ul class="layui-upload-list weUploader" id="weUploader" data-num='1' data-savetype='ad' data-action="uploadimage" data-name='ad_image'  data-url="{:pishop_url('admin/ueditor/uploader')}">
+                    {if condition="isset($ad) && $ad.ad_image"}
+                    <li class="pishop-layer-photos">
+                      <img class="layui-upload-img" layer-src="{$ad.ad_image}"  src="{$ad.ad_image}" alt="">
+                      <input type="hidden" name="ad_image" value="{$ad.ad_image}">
+                      <span class="layui-img-del"></span>
+                    </li>
+                    {/if}
+                </ul>
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                  <span class="x-red">*</span>请上传图片格式文件,建议图片尺寸400*168像素(宽*高)
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  <span class="x-red"></span>开始时间
+              </label>
+              <div class="layui-input-inline">
+                 <input type="text" value="{$ad.start_time?date('Y-m-d',$ad.start_time): date('Y-m-d')}"  class="layui-input"  name="start_time" id="start_time">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  <span class="x-red"></span>结束时间
+              </label>
+              <div class="layui-input-inline">
+                 <input type="text" value="{$ad.end_time?date('Y-m-d',$ad.end_time): date('Y-m-d',strtotime('+10 year'))}"  class="layui-input"  name="end_time" id="end_time">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  <span class="x-red"></span>背景颜色
+              </label>
+              <div class="layui-input-inline">
+                 <input style="width: 70%;display: inline-block;"  type="text"  name="bgcolor" value="{$ad.bgcolor?$ad.bgcolor:''}" placeholder="请选择颜色" class="layui-input" id="color-select-input">
+                 <div id="color-select" style="display: inline-block;"></div>
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  <span class="x-red"></span>是否发布
+              </label>
+              <div class="layui-input-inline">
+                 <input type="checkbox" name="is_open" {:isset($ad)?($ad.is_open?'checked':''):'checked'} lay-skin="switch" lay-text="是|否">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  <span class="x-red"></span>是否新窗口
+              </label>
+              <div class="layui-input-inline">
+                 <input type="checkbox" name="target" {:isset($ad)?($ad.target?'checked':''):'checked'} lay-skin="switch" lay-text="是|否">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_repass" class="layui-form-label">
+              </label>
+              <input type="hidden" name="ad_id" value="{$ad.ad_id?$ad.ad_id:''}">
+              <button  class="layui-btn" lay-filter="add" lay-submit="">
+                  确认提交
+              </button>
+              <p  class="layui-btn layui-btn-danger" onclick="x_admin_close()">
+                  取消
+              </p>
+          </div>
+      </form>
+    </div>
+    <script>
+        layui.use(['form','layer','laydate','colorpicker'], function(){
+            $ = layui.jquery;
+          var form = layui.form
+          ,layer = layui.layer
+          ,laydate= layui.laydate
+          ,colorpicker = layui.colorpicker;
+
+          //颜色选择器表单赋值
+          colorpicker.render({
+            elem: '#color-select'
+            ,color: '{$ad.bgcolor?$ad.bgcolor:'rgba(68,66,66,0.5)'}'
+            ,format: 'rgb'
+            ,alpha: true //开启透明度滑块
+            ,done: function(color){
+              $('#color-select-input').val(color);
+            }
+          });
+
+
+          //执行一个laydate实例
+          laydate.render({
+            elem: '#start_time' //指定元素
+          });
+          //执行一个laydate实例
+          laydate.render({
+            elem: '#end_time' //指定元素
+          });
+
+          //监听提交
+          form.on('submit(add)', function(data){
+
+            if(data.field.media_type==0 && !data.field.ad_image){
+               layer.msg("类型为图片，图片必须选",function(){});
+               return false;
+            }
+
+            console.log(data);
+
+            $.post('{:pishop_url('admin/ad/addad')}', data.field, function(response, textStatus, xhr) {
+                if(response.code==0){
+                  layer.msg(response.msg,function(){});
+                }else{
+                  layer.alert(response.msg, {icon: 6},function(){
+                      x_admin_close();
+                      $(window.parent.document).find('.layui-laypage-btn').click();
+                  });
+                }
+            });
+           
+            return false;
+          });
+          
+        });
+    </script>
+
+</body>
+
+</html>

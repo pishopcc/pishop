@@ -29,7 +29,9 @@ class Article extends AdminBase
 
             $where =['delete_time'=>'null'];
 
-            input('search_type') && input('val') ? $where[input('search_type')] = ['like',"%".input('val')."%"] : false;
+            input('search_type') && $where['t1.cate_id'] = input('search_type');
+
+            input('val') ? $where['title'] = ['like',"%".input('val')."%"] : false;
 
             $articleList  = Db::name('article')
             ->alias('t1')
@@ -43,6 +45,8 @@ class Article extends AdminBase
             $this->ajaxpage($articleList);
 
         }else{
+            $cateList = (new ArticleCate)->getTree();
+            $this->assign('cateList',$cateList);
 
             return $this->fetch(); 
         }
@@ -50,9 +54,43 @@ class Article extends AdminBase
 
     public function article()
     {
-        $cateList = (new ArticleCate)->getTree();
-        $this->assign('cateList',$cateList);
-        return $this->fetch();
+        if (Request::instance()->isAjax()){
+
+            $postData = input('post.');
+
+
+            $validate = Loader::validate('Article');
+
+            if(!$validate->check($postData)){
+                $this->error($validate->getError());
+            }
+
+            $postData['is_open'] = input('is_open') ? '1' : '0';
+
+            if(input('article_id')){
+                $res = (new ArticleModel)->update($postData);
+            }else{
+                 $res = ArticleModel::create($postData);
+            }
+
+            if($res){
+                $this->success("提交成功"); 
+            }else{
+                $this->error('提交失败');
+            }
+
+        }else{
+
+            if(input('article_id')){
+                $article = ArticleModel::get(input('article_id'));
+
+                $this->assign('article',$article);
+            }
+            $cateList = (new ArticleCate)->getTree();
+            $this->assign('cateList',$cateList);
+            return $this->fetch();
+        }
+        
     }
 
     public function del($value='')

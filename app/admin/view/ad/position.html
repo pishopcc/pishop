@@ -1,0 +1,171 @@
+ <body class="layui-anim">
+    <div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a >首页</a>
+        <a >广告管理</a>
+        <a><cite>广告位管理</cite></a>
+      </span>
+      <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div>
+    <div class="x-body">
+      <div class="layui-row">
+        <div class="layui-form layui-col-md12 x-so">
+          <div class="layui-input-inline">
+              <select name="key" disabled="">
+                  <option value="position_name">标题</option>
+              </select>
+          </div>
+          <div class="layui-input-inline">
+              <input type="text" name="where"  placeholder="搜索" autocomplete="off" class="layui-input">
+              <button class="layui-btn " data-type="reload"><i class="layui-icon">&#xe615;</i>搜索</button>
+          </div>
+        </div>
+      </div>
+      <table class="layui-hide" id="pishop-table" lay-filter="pishop-table"></table>
+    </div>
+
+    <script type="text/html" id="toolbar">
+      <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm " onclick="x_admin_show('增加广告位置','{:pishop_url('admin/ad/addposition')}')" lay-event='add'><i class="layui-icon"></i>增加广告位置</button>
+      </div>
+    </script>
+
+    <script type="text/html" id="bar">
+      <a class="layui-btn layui-btn-xs" target="_blank" lay-event="view"><i class="layui-icon">&#xe670;</i>查看</a>
+      <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑</a>
+      <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event='showcode'><i class="layui-icon">&#xe64e;</i>代码调用</a>
+    </script>
+
+    <script type="text/html" id="is_open">
+      <input type="checkbox" name="is_open" value="{{d.position_id}}" lay-skin="switch" lay-text="是|否" lay-filter="is_open" {{ d.is_open=='1' ? 'checked' : '' }}>
+    </script>
+
+
+    <script>
+      layui.use(['table','form'], function(){
+        var table = layui.table;
+        var form = layui.form;
+
+        
+
+        table.render({
+          elem: '#pishop-table'
+          ,url:'{:pishop_url('admin/ad/position')}'
+          ,toolbar: '#toolbar'
+          ,title:'会员数据'
+          ,defaultToolbar: ['filter', 'print', 'exports']
+          ,cols: [[
+            {field:'position_id', title: 'ID',width:60}
+            ,{field:'position_name', title: '广告位标题',minWidth:200}
+            ,{field:'ad_width', title: '宽度',width:60}
+            ,{field:'ad_height', title: '高度',width:60}
+            ,{field:'position_desc', title: '广告位描述',width:120}
+            ,{field:'is_open', title: '启用状态',width:100,templet: '#is_open'}
+            ,{title:'操作', toolbar: '#bar',width:250,fixed:'right'}
+          ]],
+          id:'pishop-table'
+          ,page: true
+          ,done:function () {
+            layer.photos({
+              photos: '.pishop-layer-photos'
+              ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+            });
+          }
+        });
+
+        
+
+        //监听切换状态操作
+      form.on('switch(is_open)', function(obj){
+        var data = {table:'ad_position'};
+        data.id_name = 'position_id';
+        data.id_value = this.value;
+        data.field = 'is_open';
+        data.field_value =obj.elem.checked ? 1 : 0;
+
+        $.post('{:pishop_url('admin/common/changeStatus')}',data, function(response, textStatus, xhr) {
+            if(response.code==0){
+              layer.msg(response.msg,function(){});
+
+              if(obj.elem.checked==false){
+                obj.elem.checked = true;
+              }else{
+                obj.elem.checked = false;
+              }
+              form.render();
+            }else{
+              layer.msg(response.msg, {icon: 6,time:300},function(){});
+            }
+          });
+        });
+
+
+        //头工具栏事件
+        // table.on('toolbar(pishop-table)', function(obj){
+        //   var checkStatus = table.checkStatus(obj.config.id);
+        //   switch(obj.event){
+        //     case 'deleteall':
+        //       var data = checkStatus.data;
+        //       if(data.length<=0){
+        //           layer.msg('至少选择一个');
+        //           return;
+        //       }
+        //       var article_id = '';
+
+        //       for(var i in data){
+        //         article_id += data[i].article_id+',';
+        //       }
+        //       $.post('{:pishop_url('admin/article/del')}', {article_id: article_id}, function(response, textStatus, xhr) {
+        //         if(response.code==0){
+        //           layer.msg(response.msg,function(){});
+        //         }else{
+        //           layer.msg(response.msg, {icon: 6,time:300},function(){});
+        //           $('.layui-laypage-btn').click();
+        //         }
+        //       });
+        //     break;
+        //   };
+        // });
+
+        //工具栏
+        table.on('tool(pishop-table)', function(obj){
+          var data = obj.data;
+          if(obj.event === 'showcode'){
+            x_admin_show('代码调用','{:pishop_url('admin/ad/showcode')}?position_id='+data.position_id);
+            
+          } else if(obj.event === 'edit'){
+            x_admin_show('编辑','{:pishop_url('admin/ad/addposition')}?position_id='+data.position_id);
+          } else if(obj.event === 'view'){
+
+            location.href = "{:pishop_url('admin/ad/index')}?position_id="+data.position_id;
+          }
+        });
+
+        // 重新加载表格
+        var $ = layui.$, active = {
+          reload: function(){
+            //执行重载
+            table.reload('pishop-table', {
+              page: {
+                curr: 1 //重新从第 1 页开始
+              }
+              ,where: {
+                search_type: $('select[name=key]').val(),
+                val:$('input[name=where]').val()
+              }
+            });
+          }
+        };
+        
+        // 搜索
+        $('.x-so .layui-btn').on('click', function(){
+          var type = $(this).data('type');
+          active[type] ? active[type].call(this) : '';
+        });
+
+      });
+      </script>
+  </body>
+
+</html>

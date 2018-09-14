@@ -34,7 +34,7 @@
             <td><input type="text" class="layui-input x-sort" name="sort" value="{$cate.sort}" data-cate-id='{$cate.cate_id}' data-cate-name='{$cate.cate_name}' data-fid='{$cate.fid}' data-show-in-nav="{$cate.show_in_nav}"  style="height: 25px" onkeyup="this.value=/^\d+\.?\d{0,2}$/.test(this.value) ? this.value : ''"></td>
             <td class="td-manage">
               <button class="layui-btn layui-btn layui-btn-xs"  onclick="x_admin_show('编辑','{:pishop_url('admin/article/cateedit',['cate_id'=>$cate.cate_id])}')" ><i class="layui-icon">&#xe642;</i>编辑</button>
-              <button class="layui-btn layui-btn-warm layui-btn-xs"  onclick="x_admin_show('添加栏目','{:pishop_url('admin/article/cateadd',['cate_id'=>$cate.cate_id])}')" ><i class="layui-icon">&#xe642;</i>添加子栏目</button>
+              <button class="layui-btn layui-btn-normal layui-btn-xs"  onclick="x_admin_show('添加栏目','{:pishop_url('admin/article/cateadd',['cate_id'=>$cate.cate_id])}')" ><i class="layui-icon">&#xe642;</i>添加子栏目</button>
               <button class="layui-btn-danger layui-btn layui-btn-xs"  onclick="cate_del(this,'{$cate.cate_id}')" href="javascript:;" ><i class="layui-icon">&#xe640;</i>删除</button>
             </td>
           </tr>

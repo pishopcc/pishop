@@ -15,6 +15,7 @@ use app\common\model\AuthRoleUser as AuthRoleUserModel;
 use app\common\model\User as UserModel;
 use pishop\controller\AdminBase;
 use think\Cache;
+use think\Db;
 use think\Loader;
 use think\Request;
 
@@ -25,18 +26,29 @@ class Admin extends AdminBase{
      */
     public function index()
     {
-    	$where = ['type' => '1'];
+    	
 
-    	if(input('nickname')){
+    	if (Request::instance()->isAjax()){
 
-    		$where['nickname'] = ['like','%'.input('nickname').'%'];
-    	}
+            $where = ['type' => '1'];
+            
+            input('search_type') && input('val') ? $where[ input('search_type')] = ['like',"%".input('val')."%"] : false;
 
-        $admins = UserModel::where($where)->paginate(10);
+            $dataList  = Db::name('user')
+            ->field('uid,nickname,create_time,status')
+            ->where($where)
+            ->where('delete_time','null')
+            ->order('uid desc')
+            ->paginate(input('limit'));
 
-        $this->assign('admins',$admins);
+            $this->ajaxpage($dataList);
 
-        return $this->fetch();
+        }else{
+            // $cateList = (new ArticleCate)->getTree();
+            // $this->assign('cateList',$cateList);
+
+            return $this->fetch(); 
+        }
     }
     /**
      * [addAdmin 管理员增加/编辑]
@@ -99,7 +111,7 @@ class Admin extends AdminBase{
             }
         }else{
             // 编辑管理员
-            if(input('edit')){
+            if(input('uid')){
                 $uid = intval(input('uid'));
                 $admin = UserModel::get($uid);
                 $admin->roles = AuthRoleUserModel::where('uid',$uid)->column('roid');
@@ -118,7 +130,7 @@ class Admin extends AdminBase{
             $uid = input('post.uid');
 
             if($uid==1){
-                $this->errot("超级管理员状态不能删除");
+                $this->error("超级管理员状态不能删除");
             }
             $res = UserModel::destroy($uid);
 

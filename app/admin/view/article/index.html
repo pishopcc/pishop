@@ -13,28 +13,29 @@
       <div class="layui-row">
         <div class="layui-form layui-col-md12 x-so">
           <div class="layui-input-inline">
-            <select name="key">
-              <option value="nickname">会员昵称</option>
-              <option value="email">邮箱</option>
-              <option value="mobile">手机</option>
-            </select>
+              <select name="key">
+                  <option value="0">全部</option>
+                  {volist name="cateList" id='cate'}
+                  <option {:input('cate_id')==$cate.cate_id?'selected':''}  value="{$cate.cate_id}">{$cate.margin}├{$cate.cate_name}</option>
+                  {/volist}
+              </select>
           </div>
-          <input type="text" name="where"  placeholder="查询" autocomplete="off" class="layui-input">
+          <input type="text" name="where"  placeholder="搜索" autocomplete="off" class="layui-input">
           <button class="layui-btn" data-type="reload"><i class="layui-icon">&#xe615;</i>搜索</button>
         </div>
       </div>
-      <table class="layui-hide" id="user" lay-filter="user"></table>
+      <table class="layui-hide" id="pishop-table" lay-filter="pishop-table"></table>
     </div>
     <script type="text/html" id="toolbar">
       <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event='deleteall'><i class="layui-icon"></i>批量删除</button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event='deleteall'><i class="layui-icon">&#xe640;</i>批量删除</button>
         <button class="layui-btn layui-btn-sm " onclick="x_admin_show('增加文章','{:pishop_url('admin/article/article')}','','',true)" lay-event='add'><i class="layui-icon"></i>增加文章</button>
       </div>
     </script>
     <script type="text/html" id="bar">
-      <a class="layui-btn layui-btn-xs" target="_blank" href="{:pishop_url('index/index/index')}"><i class="layui-icon">&#xe642;</i>查看</a>
-      <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe659;</i>编辑</a>
-      <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event='delete'><i class="layui-icon">&#xe68e;</i>删除</a>
+      <a class="layui-btn layui-btn-xs" target="_blank" href="{:pishop_url('index/index/index')}"><i class="layui-icon">&#xe7ae;</i>查看</a>
+      <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑</a>
+      <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event='delete'><i class="layui-icon">&#xe640;</i>删除</a>
     </script>
     <script type="text/html" id="is_open">
       <input type="checkbox" name="is_open" value="{{d.article_id}}" lay-skin="switch" lay-text="是|否" lay-filter="is_open" {{ d.is_open == '1' ? 'checked' : '' }}>
@@ -45,7 +46,7 @@
         var form = layui.form;
 
         table.render({
-          elem: '#user'
+          elem: '#pishop-table'
           ,url:'{:pishop_url('admin/article/index')}'
           ,toolbar: '#toolbar'
           ,title:'会员数据'
@@ -58,10 +59,10 @@
             ,{field:'is_open', title: '显示',width:80,templet: '#is_open'}
             ,{field:'create_time', title: '注册日期',templet: function(d){
                return fmtDate(d.create_time);
-            },width:200}
+            },width:200,sort: true}
             ,{title:'操作', toolbar: '#bar',width:220,fixed:'right'}
           ]],
-          id:'userList'
+          id:'pishop-table'
           ,page: true
         });
 
@@ -91,7 +92,7 @@
 
 
         //头工具栏事件
-        table.on('toolbar(user)', function(obj){
+        table.on('toolbar(pishop-table)', function(obj){
           var checkStatus = table.checkStatus(obj.config.id);
           switch(obj.event){
             case 'deleteall':
@@ -118,7 +119,7 @@
         });
 
         //工具栏
-        table.on('tool(user)', function(obj){
+        table.on('tool(pishop-table)', function(obj){
           var data = obj.data;
           if(obj.event === 'delete'){
             $.post('{:pishop_url('admin/article/del')}', {article_id: data.article_id}, function(response, textStatus, xhr) {
@@ -131,7 +132,7 @@
             });
             
           } else if(obj.event === 'edit'){
-            x_admin_show('用户详情','{:pishop_url('admin/user/useredit')}?uid='+data.uid);
+            x_admin_show('用户详情','{:pishop_url('admin/article/article')}?article_id='+data.article_id,'','',true);
           }
         });
 
@@ -139,7 +140,7 @@
         var $ = layui.$, active = {
           reload: function(){
             //执行重载
-            table.reload('userList', {
+            table.reload('pishop-table', {
               page: {
                 curr: 1 //重新从第 1 页开始
               }

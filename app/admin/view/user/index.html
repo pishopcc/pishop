@@ -33,9 +33,9 @@
       </div>
     </script>
     <script type="text/html" id="bar">
-      <a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i>详情</a>
-      <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="account"><i class="layui-icon">&#xe659;</i>资金</a>
-      <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event='address'><i class="layui-icon">&#xe68e;</i>收货地址</a>
+      <a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe7ae;</i>详情</a>
+      <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="account"><i class="layui-icon">&#xe659;</i>资金</a>
+      <a class="layui-btn  layui-btn-danger layui-btn-xs" lay-event='address'><i class="layui-icon">&#xe68e;</i>收货地址</a>
     </script>
     <script>
       layui.use('table', function(){
@@ -53,13 +53,13 @@
             ,{field:'uid', title: 'UID',width:80}
             ,{field:'nickname', title: '会员昵称',width:120}
             ,{field:'level_name', title: '会员等级'}
-            ,{field:'email', title: '邮箱'}
+            ,{field:'email', title: '邮箱',width:200}
             ,{field:'mobile', title: '手机号码'}
-            ,{field:'balance', title: '余额'}
-            ,{field:'score', title: '积分'}
+            ,{field:'balance', title: '余额',width:80}
+            ,{field:'score', title: '积分',width:60}
             ,{field:'create_time', title: '注册日期',templet: function(d){
                return fmtDate(d.create_time);
-            }}
+            },width:200}
             ,{title:'操作', toolbar: '#bar',fixed: 'right',width:250}
           ]],
           id:'userList'

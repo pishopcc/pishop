@@ -183,14 +183,19 @@
 			if(chooseNum > 1){
 				
 				filelist.each(function(){
-					fileurl_tmp += '<li><img class="layui-upload-img" src="'+$(this).val()+'" alt=""><input type="hidden" name="files[]" value="'+$(this).val()+'"></li>';	
+					fileurl_tmp += '<li class="pishop-layer-photos"><img class="layui-upload-img" layer-src="'+$(this).val()+'" src="'+$(this).val()+'" alt=""><input type="hidden" name="{$info.name}[]" value="'+$(this).val()+'"><span class="layui-img-del"></span></li>';	
 				});
 
 			}else{
-				fileurl_tmp += '<li><img class="layui-upload-img" src="'+filelist.val()+'" alt=""><input type="hidden" name="file" value="'+filelist.val()+'"></li>';
+				fileurl_tmp += '<li class="pishop-layer-photos"><img class="layui-upload-img" layer-src="'+filelist.val()+'" src="'+filelist.val()+'" alt=""><input type="hidden" name="{$info.name}" value="'+filelist.val()+'"><span class="layui-img-del"></span></li>';
 			}
 
-			$(window.parent.document).find("#weUploader").append(fileurl_tmp);
+			$(window.parent.document).find("#{$info.id}").append(fileurl_tmp);
+
+			window.parent.layer.photos({
+	          photos: '.pishop-layer-photos'
+	          ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+	        });
 
 			window.parent.layer.closeAll();
 

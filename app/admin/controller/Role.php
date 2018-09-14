@@ -13,6 +13,7 @@ namespace app\admin\controller;
 use app\common\model\AdminNode as AdminNodeModel;
 use app\common\model\AuthRole as AuthRoleModel;
 use pishop\controller\AdminBase;
+use think\Db;
 use think\Loader;
 use think\Request;
 
@@ -23,18 +24,28 @@ class Role extends AdminBase{
      */
     public function index()
     {
-    	$where = [];
+    	if (Request::instance()->isAjax()){
 
-    	if(input('title')){
+            $where =[];
+            
+            input('search_type') && input('val') ? $where[ input('search_type')] = ['like',"%".input('val')."%"] : false;
 
-    		$where['title'] = ['like','%'.input('title').'%'];
-    	}
+            $dataList  = Db::name('auth_role')
+            ->alias('t1')
+            ->field('t1.*')
+            ->where($where)
+            ->where('delete_time','null')
+            ->order('t1.roid desc')
+            ->paginate(input('limit'));
 
-        $roles = AuthRoleModel::where($where)->paginate(10);
+            $this->ajaxpage($dataList);
 
-        $this->assign('roles',$roles);
+        }else{
+            // $cateList = (new ArticleCate)->getTree();
+            // $this->assign('cateList',$cateList);
 
-        return $this->fetch();
+            return $this->fetch(); 
+        }
     }
     /**
      * [addAdmin 管理员增加/编辑]
@@ -84,7 +95,7 @@ class Role extends AdminBase{
             }
         }else{
             // 编辑管理员
-            if(input('edit')){
+            if(input('roid')){
                 $roid = intval(input('roid'));
                 $role = AuthRoleModel::get($roid);
                 $role->rules = explode(',', $role->rules);
@@ -104,7 +115,7 @@ class Role extends AdminBase{
             $roid = input('post.roid');
 
             if($roid==1){
-                $this->errot("超级管理员不能删除");
+                $this->error("超级管理员不能删除");
             }
 
             $res = AuthRoleModel::destroy($roid);

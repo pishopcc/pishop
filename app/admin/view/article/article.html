@@ -11,8 +11,8 @@
                   <span class="x-red">*</span>标题
               </label>
               <div class="layui-input-inline">
-                 <input type="text" name="title" required="" lay-verify="required" value="" 
-                  autocomplete="off"  class="layui-input">
+                 <input type="text" name="title" required="" lay-verify="required" 
+                  autocomplete="off" value="{$article.title?$article.title:''}"  class="layui-input">
               </div>
               <div class="layui-form-mid layui-word-aux">
                   <span class="x-red">*</span>
@@ -26,7 +26,7 @@
               <div class="layui-input-inline">
                   <select name="cate_id">
                         {volist name="cateList" id='cate'}
-                        <option {:input('cate_id')==$cate.cate_id?'selected':''}  value="{$cate.cate_id}">{$cate.margin}├{$cate.cate_name}</option>
+                        <option {:isset($article) && $article.cate_id==$cate.cate_id ? 'selected':''}  value="{$cate.cate_id}">{$cate.margin}├{$cate.cate_name}</option>
                         {/volist}
                   </select>
               </div>
@@ -39,7 +39,7 @@
                   <span class="x-red"></span>链接
               </label>
               <div class="layui-input-inline">
-                 <input type="url" name="link"  required=""  value="" 
+                 <input type="url" name="link"  required=""  value="{$article.link?$article.link:''}" 
                   autocomplete="off"  class="layui-input">
               </div>
               <div class="layui-form-mid layui-word-aux">
@@ -53,7 +53,7 @@
               </label>
               <div class="layui-input-inline">
                  <input type="url" name="author" 
-                  autocomplete="off" value="{:config('site_name')}" class="layui-input">
+                  autocomplete="off"  value="{$article.author? $article.author : config('site_name')}"  class="layui-input">
               </div>
           </div>
           <div class="layui-form-item">
@@ -62,7 +62,7 @@
               </label>
               <div class="layui-input-inline">
                  <input type="email" name="author_email" 
-                  autocomplete="off" value="{:config('email')}" class="layui-input">
+                  autocomplete="off" value="{$article.email?$article.email : config('email')}" class="layui-input">
               </div>
           </div>
           <div class="layui-form-item">
@@ -70,7 +70,7 @@
                   <span class="x-red"></span>发布时间
               </label>
               <div class="layui-input-inline">
-                 <input type="text" value="{:date('Y-m-d')}"  class="layui-input"  name="publish_time" id="publish_time">
+                 <input type="text" value="{$article.publish_time?date('Y-m-d',$article.publish_time): date('Y-m-d')}"  class="layui-input"  name="publish_time" id="publish_time">
               </div>
           </div>
           <div class="layui-form-item">
@@ -78,7 +78,7 @@
                   <span class="x-red"></span>浏览量
               </label>
               <div class="layui-input-inline">
-                 <input type="number" value="100"  class="layui-input"  name="click">
+                 <input type="number" value="{$article.number?$article.number : '100'}"  class="layui-input"  name="click">
               </div>
           </div>
           <div class="layui-form-item">
@@ -86,23 +86,26 @@
                   <span class="x-red"></span>是否显示
               </label>
               <div class="layui-input-inline">
-                 <input type="checkbox"  name="is_open" checked="" lay-skin="switch" lay-text="是|否">
+                 <input type="checkbox" name="is_open" {:isset($article)?($article.is_open?'checked':''):'checked'} lay-skin="switch" lay-text="是|否">
               </div>
           </div>
           <div class="layui-form-item">
               <label for="L_username" class="layui-form-label">
-                  <span class="x-red"></span>主图
+                  <span class="x-red"></span>封面
               </label>
               <div class="layui-input-block">
-                <ul class="layui-upload-list" id="weUploader" data-num='5' data-savetype='article' data-action="uploadimage" data-url="{:pishop_url('admin/ueditor/uploader')}">
-                    <!-- <li>
-                      <img class="layui-upload-img" src="http://www.pishop.com/upload/article/20180908/1536388106532174.jpg" alt="">
-                      <input type="hidden" name="files[]" value="http://www.pishop.com/upload/article/20180908/1536388106532174.jpg">
-                    </li> -->
+                <ul class="layui-upload-list weUploader" id="weUploader" data-num='1' data-savetype='article' data-action="uploadimage" data-name='thumb'  data-url="{:pishop_url('admin/ueditor/uploader')}">
+                    {if condition="isset($article) && $article.thumb"}
+                    <li class="pishop-layer-photos">
+                      <img class="layui-upload-img" layer-src="{$article.thumb}"  src="{$article.thumb}" alt="">
+                      <input type="hidden" name="thumb" value="{$article.thumb}">
+                      <span class="layui-img-del"></span>
+                    </li>
+                    {/if}
                 </ul>
               </div>
               <div class="layui-form-mid layui-word-aux">
-                  <span class="x-red">*</span>双击可以删除
+                  <span class="x-red">*</span>点击看大图,没上传采用默认封面
               </div>
           </div>
           <div class="layui-form-item" style="position: relative;z-index: 1">
@@ -110,7 +113,7 @@
                   <span class="x-red">*</span>文章内容
               </label>
               <div class="layui-input-block">
-                  <div id="editor" type="text/plain"></div>
+                  <script id="editor" name="content" type="text/plain">{$article.content?$article.content:''}</script>
               </div>
           </div>
           <div class="layui-form-item" style="position: relative;z-index: 1">
@@ -118,8 +121,8 @@
                   关键字(keywords)
               </label>
               <div class="layui-input-inline">
-                  <input type="email" name="keywords" 
-                  autocomplete="off" value="" class="layui-input">
+                  <input type="text" name="keywords" 
+                  autocomplete="off" value="{$article.keywords?$article.keywords:''}" class="layui-input">
               </div>
           </div>
           <div class="layui-form-item" style="position: relative;z-index: 1">
@@ -127,12 +130,13 @@
                   网页描述(description)
               </label>
               <div class="layui-input-inline">
-                  <textarea name="description" placeholder="请输入内容" class="layui-textarea"></textarea>
+                  <textarea name="description" placeholder="请输入内容" class="layui-textarea">{$article.description?$article.description:''}</textarea>
               </div>
           </div>
           <div class="layui-form-item">
               <label for="L_repass" class="layui-form-label">
-              </label>  
+              </label>
+              <input type="hidden" name="article_id" value="{$article.article_id?$article.article_id:''}">
               <button  class="layui-btn" lay-filter="add" lay-submit="">
                   确认提交
               </button>
@@ -154,15 +158,23 @@
             elem: '#publish_time' //指定元素
           });
 
+
           //监听提交
           form.on('submit(add)', function(data){
+
+            if(!data.field.link && data.field.content.length < 20){
+                layer.msg("内容至少20个长度",function(){});
+                UE.getEditor('editor').focus();
+                return false;
+            }
             // console.log(data);
-            $.post('{:pishop_url('admin/user/usereditxxxxxxxx')}', data.field, function(response, textStatus, xhr) {
+            $.post('{:pishop_url('admin/article/article')}', data.field, function(response, textStatus, xhr) {
                 if(response.code==0){
                   layer.msg(response.msg,function(){});
                 }else{
                   layer.alert(response.msg, {icon: 6},function(){
                       x_admin_close();
+                      $(window.parent.document).find('.layui-laypage-btn').click();
                   });
                 }
             });

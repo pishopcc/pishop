@@ -37,10 +37,14 @@ class Ueditor extends AdminBase
 		$num = input('num') ? input('num'):$this->error('数量不对');
 		$article = input('savetype') ? input('savetype'):$this->error('存储类型不对');
 		$uploadimage = input('action') ? input('action'):$this->error('上传类型不对');
+		$name = input('name') ? input('name'):$this->error('name没有指定不对');
+		$id = input('id') ? input('id'):$this->error('需要绑定的id不存在');
 		$info = [
 			'num'=>$num,
 			'savetype'=>$article,
-			'action'=>$uploadimage
+			'action'=>$uploadimage,
+			'name'=>$name,
+			'id'=>$id
 		];
 		$this->assign('info',$info);
 		return $this->fetch();

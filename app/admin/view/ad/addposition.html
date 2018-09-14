@@ -1,0 +1,103 @@
+<style>
+    .layui-form .layui-input-inline{
+        width: 300px;
+    }
+</style>
+<body>
+    <div class="x-body">
+        <form class="layui-form">
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  <span class="x-red">*</span>广告位标题
+              </label>
+              <div class="layui-input-inline">
+                 <input type="text" name="position_name" required="" lay-verify="required" 
+                  autocomplete="off" value="{$position.position_name?$position.position_name:''}"  class="layui-input">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  广告位描述
+              </label>
+              <div class="layui-input-inline">
+                 <input type="text" name="position_desc" required="" lay-verify="required" 
+                  autocomplete="off" value="{$position.position_desc?$position.position_desc:''}"  class="layui-input">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  <span class="x-red"></span>广告位宽度
+              </label>
+              <div class="layui-input-inline">
+                 <input type="number" name="ad_width"  required=""  value="{$position.ad_width?$position.ad_width:'0';}" 
+                  autocomplete="off"  class="layui-input">
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                  <span class="x-red">*</span>px(像素)
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  <span class="x-red"></span>广告位高度
+              </label>
+              <div class="layui-input-inline">
+                 <input type="number" name="ad_height"  required=""  value="{$position.ad_height?$position.ad_height:'0';}" 
+                  autocomplete="off"  class="layui-input">
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                  <span class="x-red">*</span>px(像素)
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  <span class="x-red"></span>是否显示
+              </label>
+              <div class="layui-input-inline">
+                 <input type="checkbox" name="is_open" {:isset($position)?($position.is_open?'checked':''):'checked'} lay-skin="switch" lay-text="是|否">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_repass" class="layui-form-label">
+              </label>
+              <input type="hidden" name="position_id" value="{$position.position_id?$position.position_id:''}">
+              <button  class="layui-btn" lay-filter="add" lay-submit="">
+                  确认提交
+              </button>
+              <p  class="layui-btn layui-btn-danger" onclick="x_admin_close()">
+                  取消
+              </p>
+          </div>
+      </form>
+    </div>
+    <script>
+        layui.use(['form','layer'], function(){
+            $ = layui.jquery;
+          var form = layui.form
+          ,layer = layui.layer
+
+
+
+
+          //监听提交
+          form.on('submit(add)', function(data){
+
+            $.post('{:pishop_url('admin/ad/addposition')}', data.field, function(response, textStatus, xhr) {
+                if(response.code==0){
+                  layer.msg(response.msg,function(){});
+                }else{
+                  layer.alert(response.msg, {icon: 6},function(){
+                      x_admin_close();
+                      $(window.parent.document).find('.layui-laypage-btn').click();
+                  });
+                }
+            });
+           
+            return false;
+          });
+          
+        });
+    </script>
+
+</body>
+
+</html>

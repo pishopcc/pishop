@@ -512,11 +512,11 @@ table th, table td {
 .disabled{
 	color:#CCCCCC;
 }
-#weUploader{
+.weUploader{
 	
 	float: left;
 }
-#weUploader:after{
+.weUploader:after{
 	line-height: 60px;
 	content:'\e654';
 	font-family: layui-icon!important;
@@ -533,14 +533,41 @@ table th, table td {
 	float: left;
 	font-weight: 200;
 }
-#weUploader li{
+.weUploader li{
 	float: left;
 	margin: 5px 10px;
 	padding: 2px;
 	border: 1px solid #cfcfcf;
+	position: relative;
 }
-#weUploader li img{
+.weUploader li img{
 	width: 60px;
 	height: 60px;
 }
+.weUploader li .layui-img-del::before{
+	content:'\1006';
+	font-family: layui-icon!important;
+	width: 20px;
+	height: 20px;
+	color: #fff;
+	cursor: pointer;
+}
+.weUploader li .layui-img-del{
+	display: block;
+	background: #333 url() 0 0 no-repeat;
+	width: 20px;
+	height: 20px;
+	position: absolute;
+	top: -10px;
+	right: -10px;
+	border: 1px solid #fff;
+	border-radius: 50%;
+	text-align: center;
+	
+	line-height: 20px;
+}
+.weUploader li .layui-img-del:hover{
+	background: #FF5827 url() 0 0 no-repeat;
+}
+
 

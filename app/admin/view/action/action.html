@@ -1,0 +1,205 @@
+<style>
+    .layui-form .layui-input-inline{
+        width: 300px;
+    }
+</style>
+<body>
+    <div class="x-body">
+        <form class="layui-form">
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  <span class="x-red">*</span>专题标题
+              </label>
+              <div class="layui-input-inline">
+                 <input type="text" name="action_title" required="" lay-verify="required" 
+                  autocomplete="off" value="{$action.action_title?$action.action_title:''}"  class="layui-input">
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                  <span class="x-red">*</span>
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  <span class="x-red"></span>专题封面
+              </label>
+              <div class="layui-input-block">
+                <ul class="layui-upload-list weUploader" id="weUploader" data-num='1' data-savetype='action' data-action="uploadimage" data-name='action_image'  data-url="{:pishop_url('admin/ueditor/uploader')}">
+                    {if condition="isset($action) && $action.action_image"}
+                    <li class="pishop-layer-photos">
+                      <img class="layui-upload-img" layer-src="{$action.action_image}"  src="{$action.action_image}" alt="">
+                      <input type="hidden" name="action_image" value="{$action.action_image}">
+                      <span class="layui-img-del"></span>
+                    </li>
+                    {/if}
+                </ul>
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                  <span class="x-red">*</span>没上传采用默认封面
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  <span class="x-red"></span>距顶部距离
+              </label>
+              <div class="layui-input-inline">
+                 <input type="number" name="action_margin_top"  required=""  value="{$action.action_margin_top?$action.action_margin_top:'0';}" 
+                  autocomplete="off"  class="layui-input">
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                  <span class="x-red">*</span>px(像素)
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  <span class="x-red"></span>背景颜色
+              </label>
+              <div class="layui-input-inline">
+                 <input style="width: 70%;display: inline-block;"  type="text"  name="action_background_color" value="{$action.action_background_color?$action.action_background_color:''}" placeholder="请选择颜色" class="layui-input" id="color-select-input">
+                 <div id="color-select" style="display: inline-block;"></div>
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  <span class="x-red"></span>专题背景图
+              </label>
+              <div class="layui-input-block">
+                <ul class="layui-upload-list weUploader" id="weUploader2" data-num='1' data-savetype='action' data-action="uploadimage" data-name='action_background'  data-url="{:pishop_url('admin/ueditor/uploader')}">
+                    {if condition="isset($action) && $action.action_background"}
+                    <li class="pishop-layer-photos">
+                      <img class="layui-upload-img" layer-src="{$action.action_background}"  src="{$action.action_background}" alt="">
+                      <input type="hidden" name="action_background" value="{$action.action_background}">
+                      <span class="layui-img-del"></span>
+                    </li>
+                    {/if}
+                </ul>
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                  <span class="x-red">*</span>点击看大图,没上传采用默认无背景
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  背景图重复
+              </label>
+              <div class="layui-input-block">
+                <input type="radio" name="action_repeat" value="0" {:isset($action)?($action.action_state=='0'?'checked':''):'checked'} checked="" title="不重复">
+                <input type="radio" name="action_repeat" value="1" {:isset($action)?($action.action_state=='1'?'checked':''):'checked'} title="横向重复">
+                <input type="radio" name="action_repeat" value="2" {:isset($action)?($action.action_state=='2'?'checked':''):'checked'} title="纵向重复">
+                <input type="radio" name="action_repeat" value="3" {:isset($action)?($action.action_state=='3'?'checked':''):'checked'} title="横纵向重复">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  <span class="x-red"></span>是否发布
+              </label>
+              <div class="layui-input-inline">
+                 <input type="checkbox" name="action_state" {:isset($action)?($action.action_state?'checked':''):'checked'} lay-skin="switch" lay-text="是|否">
+              </div>
+          </div>
+          <div class="layui-form-item" style="position: relative;z-index: 1">
+              <label for="L_pass" class="layui-form-label">
+                  <span class="x-red">*</span>专题内容
+              </label>
+              <div class="layui-input-block">
+                  <script id="editor" name="action_content" type="text/plain">{$action.action_content?$action.action_content:''}</script>
+              </div>
+          </div>
+          <div class="layui-form-item" style="position: relative;z-index: 1">
+              <label for="L_pass" class="layui-form-label">
+                  关键字(keywords)
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" name="keywords" 
+                  autocomplete="off" value="{$action.keywords?$action.keywords:''}" class="layui-input">
+              </div>
+          </div>
+          <div class="layui-form-item" style="position: relative;z-index: 1">
+              <label for="L_pass" class="layui-form-label">
+                  网页描述(description)
+              </label>
+              <div class="layui-input-inline">
+                  <textarea name="description" placeholder="请输入内容" class="layui-textarea">{$action.description?$action.description:''}</textarea>
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_repass" class="layui-form-label">
+              </label>
+              <input type="hidden" name="action_id" value="{$action.action_id?$action.action_id:''}">
+              <button  class="layui-btn" lay-filter="add" lay-submit="">
+                  确认提交
+              </button>
+              <p  class="layui-btn layui-btn-danger" onclick="x_admin_close()">
+                  取消
+              </p>
+          </div>
+      </form>
+    </div>
+    <script>
+        layui.use(['form','layer','colorpicker'], function(){
+            $ = layui.jquery;
+          var form = layui.form
+          ,layer = layui.layer
+          ,colorpicker = layui.colorpicker;
+
+          //颜色选择器表单赋值
+          colorpicker.render({
+            elem: '#color-select'
+            ,color: '{$action.action_margin_top?$action.action_background_color:'rgba(68,66,66,0.5)'}'
+            ,format: 'rgb'
+            ,alpha: true //开启透明度滑块
+            ,done: function(color){
+              $('#color-select-input').val(color);
+            }
+          });
+
+
+          //监听提交
+          form.on('submit(add)', function(data){
+
+            if(!data.field.action_content || data.field.action_content.length < 10){
+                layer.msg("内容至少10个长度",function(){});
+                UE.getEditor('editor').focus();
+                return false;
+            }
+
+            $.post('{:pishop_url('admin/action/action')}', data.field, function(response, textStatus, xhr) {
+                if(response.code==0){
+                  layer.msg(response.msg,function(){});
+                }else{
+                  layer.alert(response.msg, {icon: 6},function(){
+                      x_admin_close();
+                      $(window.parent.document).find('.layui-laypage-btn').click();
+                  });
+                }
+            });
+           
+            return false;
+          });
+          
+        });
+    </script>
+<!-- 配置文件 -->
+<script type="text/javascript" src="__STATIC__Ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="__STATIC__Ueditor/ueditor.all.min.js"></script>
+<!-- 实例化编辑器 -->
+<script type="text/javascript">
+
+    var url="{:url('admin/ueditor/index',['savetype'=>'action'])}";
+
+    var ue = UE.getEditor('editor',{
+        serverUrl :url,
+        initialFrameWidth: "95%", //初化宽度
+        initialFrameHeight: 300, //初化高度            
+        focus: false, //初始化时，是否让编辑器获得焦点true或false
+        maximumWords: 99999, 
+        removeFormatAttributes: 'class,style,lang,width,height,align,hspace,valign',//允许的最大字符数 'fullscreen',
+        pasteplain:false, //是否默认为纯文本粘贴。false为不使用纯文本粘贴，true为使用纯文本粘贴
+        autoHeightEnabled: true
+
+    });
+
+</script>
+</body>
+
+</html>

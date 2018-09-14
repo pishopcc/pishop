@@ -1,117 +1,146 @@
- <body>
+ <body class="layui-anim">
     <div class="x-nav">
       <span class="layui-breadcrumb">
-        <a href="">首页</a>
-        <a href="">演示</a>
-        <a>
-          <cite>导航元素</cite>
-        </a>
+        <a >首页</a>
+        <a >权限管理</a>
+        <a><cite>角色管理</cite></a>
       </span>
       <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
         <i class="layui-icon" style="line-height:30px">ဂ</i></a>
     </div>
     <div class="x-body">
       <div class="layui-row">
-        <form class=" layui-col-md12 x-so">
-          <input type="text" name="title" placeholder="请输入角色" autocomplete="off" class="layui-input">
-          <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
-        </form>
-      </div>
-      <xblock>
-        <button class="layui-btn" onclick="x_admin_show('添加用户','{:pishop_url('admin/role/addrole')}')"><i class="layui-icon"></i>添加</button>
-        <span class="x-right" style="line-height:40px">共有数据：{$roles->count()}条</span>
-      </xblock>
-      <table class="layui-table layui-form" >
-        <thead>
-          <tr>
-            <th>roid</th>
-            <th>角色名</th>
-            <th>描述</th>
-            <th>状态</th>
-            <th>操作</th>
-        </thead>
-        <tbody>
-          {volist name="roles" id="role"}
-          <tr>
-            <td>{$role.roid}</td>
-            <td>{$role.title}</td>
-            <td>{$role.remark}</td>
-            <td class="td-status">
-              <input lay-filter='status' type="checkbox" name="yyy" lay-skin="switch" value="{$role.roid}" lay-text="启用|禁用" {$role.status ? 'checked': ''} {$role.roid==1? 'disabled' : ''} >
-            </td>
-            <td class="td-manage">
-              
-              {if condition="$role.roid!=1"}
-              <a title="编辑"  onclick="x_admin_show('编辑','{:pishop_url('admin/role/addrole',['edit'=>1,'roid'=>$role.roid]),700,500}')" href="javascript:;">
-                <i class="layui-icon">&#xe642;</i>编辑
-              </a>
-              <a title="删除" onclick="member_del(this,'{$role.roid}')" href="javascript:;">
-                <i class="layui-icon">&#xe640;</i>删除
-              </a>
-              {else/}
-              <a title="编辑" class="disabled" href="javascript:;">
-                <i class="layui-icon">&#xe642;</i>编辑
-              </a>
-              <a title="删除" class="disabled" href="javascript:;">
-                <i class="layui-icon">&#xe640;</i>删除
-              </a>
-              {/if}
-            </td>
-          </tr>
-          {/volist}
-        </tbody>
-      </table>
-      <div class="page">
-        <div>
-          {$roles->render()}
+        <div class="layui-form layui-col-md12 x-so">
+          <div class="layui-input-inline">
+              <select name="key" disabled="">
+                  <option value="title">角色名</option>
+              </select>
+          </div>
+          <input type="text" name="where"  placeholder="搜索" autocomplete="off" class="layui-input">
+          <button class="layui-btn " data-type="reload"><i class="layui-icon">&#xe615;</i>搜索</button>
         </div>
       </div>
-
+      <table class="layui-hide" id="pishop-table" lay-filter="pishop-table"></table>
     </div>
+    <script type="text/html" id="toolbar">
+      <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm " onclick="x_admin_show('增加文章','{:pishop_url('admin/role/addRole')}')" lay-event='add'><i class="layui-icon"></i>增加角色</button>
+      </div>
+    </script>
+
+    <script type="text/html" id="bar">
+      <a class="layui-btn {{ d.roid==1 ? 'layui-btn-disabled' : 'layui-btn-normal' }}  layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑</a>
+      <a class="layui-btn {{ d.roid==1 ? 'layui-btn-disabled' : 'layui-btn-danger' }} layui-btn-xs" lay-event='delete'><i class="layui-icon">&#xe640;</i>删除</a>
+    </script>
+
+    <script type="text/html" id="status">
+      <input type="checkbox" name="status" value="{{d.roid}}" lay-skin="switch" lay-text="是|否" lay-filter="status" {{ d.status ? 'checked' : '' }} {{ d.roid==1 ? 'disabled' : '' }}>
+    </script>
+
     <script>
-      layui.use(['laydate','form'], function(){
-        var laydate = layui.laydate;
+      layui.use(['table','form'], function(){
+        var table = layui.table;
         var form = layui.form;
 
+        
 
-      form.on('switch(status)', function(data){
+        table.render({
+          elem: '#pishop-table'
+          ,url:'{:pishop_url('admin/role/index')}'
+          ,toolbar: '#toolbar'
+          ,title:'会员数据'
+          ,defaultToolbar: ['filter', 'print', 'exports']
+          ,cols: [[
+            {field:'roid', title: 'ID',width:60}
+            ,{field:'title', title: '角色名',minWidth:200}
+            ,{field:'remark', title: '描述',width:200}
+            ,{field:'status', title: '状态',width:100,templet: '#status'}
+            ,{field:'create_time', title: '注册日期',templet: function(d){
+               return fmtDate(d.create_time);
+            },width:180,sort: true}
+            ,{title:'操作', toolbar: '#bar',width:150,fixed:'right'}
+          ]],
+          id:'pishop-table'
+          ,page: true
+          ,done:function () {
+            layer.photos({
+              photos: '.pishop-layer-photos'
+              ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+            });
+          }
+        });
 
-        $.post('{:url('admin/role/status')}',{roid:data.value,status:data.elem.checked}, function(res, textStatus, xhr) {
-             if(res.code==1){
+        
 
-                  layer.msg(res.msg, function(){});
-                  
+        //监听切换状态操作
+      form.on('switch(status)', function(obj){
+        var data = {table:'auth_role'};
+        data.id_name = 'roid';
+        data.id_value = this.value;
+        data.field = 'status';
+        data.field_value =obj.elem.checked ? 1 : 0;
+
+        $.post('{:pishop_url('admin/common/changeStatus')}',data, function(response, textStatus, xhr) {
+            if(response.code==0){
+              layer.msg(response.msg,function(){});
+
+              if(obj.elem.checked==false){
+                obj.elem.checked = true;
               }else{
-                  if(data.elem.checked){
-                      $(data.elem).prop('checked', false)
-                  }else{
-                      $(data.elem).prop('checked', true)
-                  }
-                  form.render();
-                  layer.msg(res.msg, function(){});
+                obj.elem.checked = false;
               }
-        },'json');
-      })
-
-    });
-
-      /*用户-删除*/
-      function member_del(obj,id){
-          layer.confirm('确认要删除吗？',function(index){
-              
-              $.post('{:url('admin/role/delrole')}', {roid: id}, function(res, textStatus, xhr) {
-                  if(res.code==1){
-                    layer.msg('删除成功', {icon: 1},function(){
-                        location.reload();
-                    });
-                  }else{
-                    layer.msg(res.msg, function(){});
-                  }
-              });
-              
+              form.render();
+            }else{
+              layer.msg(response.msg, {icon: 6,time:300},function(){});
+            }
           });
-      }
-    </script>
+        });
+
+
+        //头工具栏事件
+
+        //工具栏
+        table.on('tool(pishop-table)', function(obj){
+          var data = obj.data;
+          if(obj.event === 'delete'){
+            $.post('{:pishop_url('admin/role/delrole')}', {roid: data.roid}, function(response, textStatus, xhr) {
+              if(response.code==0){
+                layer.msg(response.msg,function(){});
+              }else{
+                layer.msg(response.msg, {icon: 6,time:300},function(){});
+                $('.layui-laypage-btn').click();
+              }
+            });
+            
+          } else if(obj.event === 'edit'){
+            x_admin_show('编辑','{:pishop_url('admin/role/addRole')}?roid='+data.roid);
+          }
+        });
+
+        // 重新加载表格
+        var $ = layui.$, active = {
+          reload: function(){
+            //执行重载
+            table.reload('pishop-table', {
+              page: {
+                curr: 1 //重新从第 1 页开始
+              }
+              ,where: {
+                search_type: $('select[name=key]').val(),
+                val:$('input[name=where]').val()
+              }
+            });
+          }
+        };
+        
+        // 搜索
+        $('.x-so .layui-btn').on('click', function(){
+          var type = $(this).data('type');
+          active[type] ? active[type].call(this) : '';
+        });
+
+      });
+      </script>
   </body>
 
 </html>

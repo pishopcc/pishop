@@ -4,6 +4,12 @@ $(function () {
     function() {
         layer = layui.layer;
         element = layui.element;
+
+        layer.photos({
+          photos: '.pishop-layer-photos'
+          ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+        });
+
     });
 
     //触发事件
@@ -150,24 +156,24 @@ $(function () {
          
     })
 
-    $(document).on('click', '#weUploader', function(event) {
+    $(document).on('click', '.weUploader', function(event) {
+        // console.log($(this).attr("id"));return;
         data = $(this).data();
-        if($("#weUploader li").length>=data.num){
+        if($(this).find('li').length>=data.num){
             layer.msg("最多只能上传"+data.num+"个");
             return;
         }
-        num = data.num-$("#weUploader li").length;
-        x_admin_show('选择图片',data.url+"?num="+num+"&savetype="+data.savetype+"&action="+data.action);
+        num = data.num-$(this).find('li').length;
+        x_admin_show('选择图片',data.url+"?num="+num+"&savetype="+data.savetype+"&action="+data.action+"&name="+data.name+"&id="+$(this).attr("id"));
     });
 
-    $("#weUploader").on('click', 'li', function(event) {
-        // $(this).remove();
+    $(".weUploader").on('click', 'li', function(event) {
         return false;
     });
-    $("#weUploader").on('dblclick', 'li', function(event) {
-        $(this).remove();
+    $(".weUploader").on('click', '.layui-img-del', function(event) {
+        $(this).parent().remove();
     });
-    
+
 })
 
 var cateIds = [];

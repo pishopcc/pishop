@@ -131,6 +131,7 @@ class Index extends AdminBase
     public function welcome()
     {
         $countData['article_total'] = Db::name('article')->where('delete_time','null')->cache(true,3600)->count();
+        
         $countData['user_total'] = Db::name('user')->where('delete_time','null')->cache(true,3600)->count();
         $mysql = Db::query("select VERSION() as version");
         $mysql = $mysql[0]['version'];

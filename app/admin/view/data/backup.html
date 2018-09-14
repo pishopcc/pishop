@@ -1,0 +1,185 @@
+ <body class="layui-anim">
+    <div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a >首页</a>
+        <a >数据管理</a>
+        <a>
+          <cite>数据备份</cite></a>
+      </span>
+      <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div>
+    <div class="x-body">
+      <table class="layui-hide" id="pishop-table" lay-filter="pishop-table"></table>
+    </div>
+    <script type="text/html" id="toolbar">
+      <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm"  onclick="x_admin_show('添加等级','{:pishop_url('admin/user/adduser')}')"><i class="layui-icon"></i>数据备份</button>
+        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="allrepair" ><i class="layui-icon">&#xe631;</i>批量修复</button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="alloptimize" ><i class="layui-icon">&#xe639;</i>批量优化</button>
+        
+      </div>
+    </script>
+    <script type="text/html" id="bar">
+      <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="repair"><i class="layui-icon">&#xe631;</i>修复</a>
+      <a class="layui-btn layui-btn-xs layui-btn layui-btn-danger" lay-event="optimize"><i class="layui-icon">&#xe639;</i>优化</a>
+    </script>
+    <script>
+      layui.use('table', function(){
+        var table = layui.table;
+
+        table.render({
+          elem: '#pishop-table'
+          ,url:'{:pishop_url('admin/data/backup')}'
+          ,toolbar: '#toolbar'
+          ,cellMinWidth:150
+          ,title:'数据表'
+          ,limit:100
+          ,defaultToolbar: ['filter', 'print', 'exports']
+          ,cols: [[
+            {type:'checkbox', fixed: 'left'}
+            ,{field:'Name', title: '表名',minWidth:180}
+            ,{field:'Rows', title: '记录条数',sort:true,width:100}
+            ,{field:'Engine', title: '引擎',width:100}
+            ,{field:'size', title: '占用空间',sort:true,width:100}
+            ,{field:'Collation', title: '编码',width:150}
+            ,{field:'Comment', title: '表描述',width:150}
+            ,{field:'Create_time', title: '创建时间',width:160}
+            ,{title:'操作', toolbar: '#bar',fixed: 'right',width:150}
+          ]],
+          id:'pishop-table'
+          ,page: true
+        });
+
+
+        //头工具栏事件
+        table.on('toolbar(pishop-table)', function(obj){
+          var checkStatus = table.checkStatus(obj.config.id);
+          switch(obj.event){
+            case 'alloptimize':
+              var data = checkStatus.data;
+              if(data.length<1){
+                layer.msg("至少选择一个",function(){});
+                return;
+              }
+              tableIndex = 0;
+              alloptimize(data);
+
+            break;
+            case 'allrepair':
+              var data = checkStatus.data;
+              if(data.length<1){
+                layer.msg("至少选择一个",function(){});
+                return;
+              }
+              tableIndex = 0;
+              allrepair(data);
+            break;
+          };
+        });
+
+
+        table.on('tool(pishop-table)', function(obj){
+          var data = obj.data;
+          if(obj.event === 'optimize'){
+            optimize(data.Name);
+              // alert(data.Name)
+          } else if(obj.event === 'repair'){
+            repair(data.Name);
+          } 
+        });
+
+        // var $ = layui.$, active = {
+        //   reload: function(){
+        //     //执行重载
+        //     table.reload('userList', {
+        //       page: {
+        //         curr: 1 //重新从第 1 页开始
+        //       }
+        //       ,where: {
+        //         search_type: $('select[name=key]').val(),
+        //         val:$('input[name=where]').val()
+        //       }
+        //     });
+        //   }
+        // };
+        
+        // $('.x-so .layui-btn').on('click', function(){
+        //   var type = $(this).data('type');
+        //   active[type] ? active[type].call(this) : '';
+        // });
+
+      });
+
+      function optimize(table) {
+        layer.msg(table+'优化中', {icon: 16,shade: 0.01,time:30000});
+        setTimeout(function () {
+            $.post('{:pishop_url('admin/data/optimize')}', {table:table}, function(response, textStatus, xhr) {
+              if(response.code==0){
+                layer.msg(response.msg,function(){});
+              }else{
+                layer.msg(table+'优化成功', {icon: 1,shade: 0.01,time:200});
+                
+              }
+          });
+        },500)
+      }
+      function repair(table) {
+        layer.msg(table+'修复中', {icon: 16,shade: 0.01,time:30000});
+        setTimeout(function () {
+            $.post('{:pishop_url('admin/data/repair')}', {table:table}, function(response, textStatus, xhr) {
+              if(response.code==0){
+                layer.msg(response.msg,function(){});
+              }else{
+                layer.msg(table+'修复成功', {icon: 1,shade: 0.01,time:200});
+                
+              }
+          });
+        },500)
+      }
+      function allrepair(tableList) {
+        if(!tableList[tableIndex]){
+           layer.msg('修复结束', {icon: 1,shade: 0.01});
+           return;
+        }
+
+        table = tableList[tableIndex].Name;
+
+        layer.msg(table+'修复中', {icon: 16,shade: 0.01,time:30000});
+        setTimeout(function () {
+            $.post('{:pishop_url('admin/data/repair')}', {table:table}, function(response, textStatus, xhr) {
+              if(response.code==0){
+                layer.msg(response.msg,function(){});
+              }else{
+                layer.msg(table+'修复成功', {icon: 1,shade: 0.01,time:200});
+                tableIndex++;
+                allrepair(tableList);
+              }
+          });
+        },500)
+      }
+      tableIndex = 0;
+      function alloptimize(tableList) {
+        if(!tableList[tableIndex]){
+           layer.msg('优化结束', {icon: 1,shade: 0.01});
+           return;
+        }
+        table = tableList[tableIndex].Name;
+
+        layer.msg(table+'优化中', {icon: 16,shade: 0.01,time:30000});
+        setTimeout(function () {
+            $.post('{:pishop_url('admin/data/optimize')}', {table:table}, function(response, textStatus, xhr) {
+              if(response.code==0){
+                layer.msg(response.msg,function(){});
+              }else{
+                layer.msg(table+'优化成功', {icon: 1,shade: 0.01,time:200});
+                tableIndex++;
+                alloptimize(tableList);
+              }
+          });
+        },500)
+      }
+      </script>
+  </body>
+
+</html>
